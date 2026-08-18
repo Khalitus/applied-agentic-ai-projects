@@ -216,6 +216,13 @@ def clean_data(df):
         & (df["quantity"] > 0)
     ]
 
+    #converting normal date to pandas datetime column
+    df["order_date"] = pd.to_datetime(
+        df["order_date"],
+        format="mixed",
+        errors="coerce"
+    )
+
 
     # Adding new features
 
