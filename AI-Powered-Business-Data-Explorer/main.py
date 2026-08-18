@@ -327,6 +327,20 @@ def analyze_data(df):
     ] = region_summary[
         ["total_sales", "total_profit", "profit_margin"]
     ].round(2)
+
+    category_summary = (
+        df.groupby("region", as_index=False)
+        .agg(
+            total_sales=("profit","sum"),
+            total_profit=("profit","sum"),
+            total_quantity=("quantity","sum"),
+            total_orders=("order_id","nunique"),
+        )
+        .sort_values(
+            "total_sales"
+            ,ascending=False
+        )
+    )
     
     # ========================================================
     # YOUR 30% 
