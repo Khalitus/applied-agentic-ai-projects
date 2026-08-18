@@ -1,18 +1,20 @@
 {
-    "executive_summary": "The business recorded a total of 591 orders yielding 67,580,017.8 in total sales, 50,178,983.78 in total cost, and 17,401,034.02 in total profit, resulting in an overall profit margin of 25.75% and an average order value of 114,348.59 across 2,075 total quantity sold.",
-    "strongest_area": "Karachi region is the strongest area in terms of sales (24,608,300.33), profit (6,182,825.63), quantity (672), and orders (193), while Electronics is the highest-grossing category with 34,351,369.6 in sales and 8,085,463.3 in profit. Clothing holds the highest category profit margin at 37.8%.",
-    "weakest_area": "Office Supplies is the weakest category in terms of total sales (1,613,347.98) and total profit (490,635.47), while Multan is the lowest region by sales (4,868,191.25) and orders (54) among named regions.",
+    "executive_summary": "Overall business performance records 591 total orders with total sales of 67,580,017.80, a total cost of 50,178,983.78, and a total profit of 17,401,034.02. The business achieved an overall profit margin of 25.75%, an average order value of 114,348.59, and a total quantity sold of 2,075 across various regions and product categories.",
+    "strongest_area": "Karachi is the strongest region by total sales (24,608,300.33), total profit (6,182,825.63), total quantity (672), and total orders (193). Electronics is the strongest product category by total sales (34,351,369.60), total profit (8,085,463.30), total quantity (554), and total orders (152). Clothing achieved the highest profit margin at 37.80% among categories, and Multan recorded the highest regional profit margin at 27.49%.",
+    "weakest_area": "The 'Unknown' region is the weakest area in terms of performance scale, recording only 17 orders, 2,751,983.87 in total sales, 643,555.93 in total profit, 50 total quantity, and a profit margin of 23.39%. Similarly, 'Unknown' category orders represent a minor segment with 15 orders and 1,884,234.72 in total sales. Among known product categories, Office Supplies generated the lowest total sales at 1,613,347.98.",
     "key_insights": [
-        "Electronics dominates category sales, contributing 34,351,369.6 out of the 67,580,017.8 total sales.",
-        "Karachi leads all regions, generating nearly half of the total volume and substantial financial returns with 193 orders and 672 total quantity sold.",
-        "Clothing and Office Supplies achieve high profit margins at 37.8% and 30.41% respectively, despite lower total sales."
+        "Karachi generates the highest volume of business, accounting for 193 out of 591 total orders and over 24 million in sales.",
+        "Electronics is the largest product category, generating 34,351,369.60 in sales and accounting for more than half of the total business sales.",
+        "Clothing has the highest profit margin of all categories at 37.80%, despite having lower total sales than Electronics and Furniture.",
+        "Multan has the highest regional profit margin at 27.49%."
     ],
     "risks": [
-        "There are unassigned or 'Unknown' regions and categories generating sales (2,751,983.87 in Unknown regions and 1,884,348.72 in Unknown categories), which points to data tracking and tracking integrity issues.",
-        "Business performance is heavily concentrated in Karachi and Electronics, exposing operations to geographic and product-specific vulnerabilities."
+        "There are transactions and data categorized as 'Unknown' for both region (17 orders, 2,751,983.87 in sales) and category (15 orders, 1,884,234.72 in sales), indicating tracking or data entry issues.",
+        "Revenue and order concentration are heavily skewed toward specific regions like Karachi and product categories like Electronics."
     ],
     "recommendations": [
-        "Investigate and resolve data tracking issues to properly categorize transactions currently marked as 'Unknown' for region and category.",
-        "Evaluate the high-margin Clothing and Office Supplies categories to see if marketing efforts can be expanded to increase their total sales volume."
+        "Improve data tracking and entry processes to eliminate 'Unknown' regions and categories.",
+        "Investigate the high profit margin in Clothing (37.80%) and Multan (27.49%) to replicate their success across other areas.",
+        "Focus marketing and operational strategies on top-performing segments like Karachi and Electronics to maximize profitability."
     ]
 }

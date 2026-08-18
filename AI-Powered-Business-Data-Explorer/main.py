@@ -327,7 +327,20 @@ def analyze_data(df):
         ["total_sales", "total_profit", "profit_margin"]
     ].round(2)
 
-    return kpis, region_summary, category_summary
+    top_5 = (
+    df
+    .groupby("product", as_index=False)
+    .agg(
+        total_sales=("sales", "sum")
+    )
+    .sort_values(
+        "total_sales",
+        ascending=False
+    )
+    .head(5)
+)
+
+    return kpis, region_summary, category_summary, top_5
 
 # GENERATING AI BUSINESS INSIGHTS
 
@@ -495,7 +508,7 @@ def main():
 
 
         # Step 3
-        kpis, region_summary, category_summary = (
+        kpis, region_summary, category_summary, top_5 = (
             analyze_data(df)
         )
 
@@ -521,6 +534,15 @@ def main():
 
         print(
             category_summary.to_string(
+                index=False
+            )
+        )
+
+        print("\nTOP 5 PRODUCTS BY SALES")
+        print("-" * 40)
+
+        print(
+            top_5.to_string(
                 index=False
             )
         )
