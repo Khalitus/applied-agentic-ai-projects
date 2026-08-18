@@ -8,46 +8,6 @@ from pydantic import BaseModel, Field
 import pandas as pd
 import numpy as np
 
-# # Load environment variables from the .env file in the same directory
-# load_dotenv()
-
-# # Get Gemini API key from environment variables
-# gemini_api_key = os.getenv("GEMINI_API_KEY")
-
-# # desired data structure using Pydantic
-# class TopicResearch(BaseModel):
-#     topic: str = Field(description="The main subject of the research")
-#     summary: str = Field(description="A brief two-sentence summary")
-#     keywords: list[str] = Field(description="List of 3 related keywords")
-
-
-# # Initialize model and parser
-# # Configure temperature, top_k, top_p, and the API key here
-# model = ChatGoogleGenerativeAI(
-#     model="gemini-1.5-flash",  # You can also use "gemini-1.5-pro" or "gemini-2.0-flash"
-#     google_api_key=gemini_api_key,
-#     temperature=0.7,  # Controls randomness (0.0 = deterministic, 1.0 = creative)
-#     top_k=40,         # Selects from the top K most probable tokens
-#     top_p=0.95,       # Nucleus sampling (cumulative probability cutoff)
-# )
-
-# parser = JsonOutputParser(pydantic_object=TopicResearch)
-
-# #prompt setup with format instructions
-# prompt = PromptTemplate(
-#     template="Answer the user query.\n{format_instructions}\nQuery: {query}\n",
-#     input_variables=["query"],
-#     partial_variables={"format_instructions": parser.get_format_instructions()},
-# )
-
-# # chain and invoke
-# chain = prompt | model | parser
-
-# result = chain.invoke({"query": "Artificial Intelligence in healthcare"})
-# print(result)
-
-
-
 CSV_FILE = "fake_retail_sales_messy.csv"
 CLEANED_CSV_FILE = "cleaned_retail_sales.csv"
 REPORT_FILE = "business_report.json"
@@ -376,9 +336,9 @@ def generate_ai_report(
     region_summary,
     category_summary
 ):
-    """Use Gemini to interpret Pandas-generated business statistics."""
+    """Using Gemini to interpret Pandas generated business statistics."""
 
-    load_dotenv()
+    load_dotenv(".env.local")
 
     gemini_api_key = os.getenv("GEMINI_API_KEY")
 
@@ -388,7 +348,7 @@ def generate_ai_report(
         )
 
     model = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash-lite",
         api_key=gemini_api_key,
         temperature=0.2,
     )
