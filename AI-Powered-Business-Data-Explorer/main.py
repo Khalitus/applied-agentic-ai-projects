@@ -335,7 +335,7 @@ def analyze_data(df):
         ["total_sales", "total_profit", "profit_margin"]
     ].round(2)
 
-        # Category analysis using groupby()
+    # Category analysis using groupby()
 
     category_summary = (
         df
@@ -552,18 +552,14 @@ def main():
             )
         )
 
-        if category_summary.empty:
+        print("\nCATEGORY ANALYSIS")
+        print("-" * 40)
 
-            print("\nPROJECT TODO")
-            print("-" * 40)
-
-            print(
-                "Complete category_summary "
-                "before generating the AI report."
+        print(
+            category_summary.to_string(
+                index=False
             )
-
-            return
-
+        )
 
         print("\nGENERATING AI REPORT...")
         print("-" * 40)
