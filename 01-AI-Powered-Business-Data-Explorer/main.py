@@ -349,31 +349,9 @@ def analyze_data(df):
         )*100,
         np.nan
     )
-    # ========================================================
-    # YOUR 30% 
-    # ========================================================
-    #
-    # Build category_summary yourself.
-    #
-    # It should work almost exactly like region_summary,
-    # except group by:
-    #
-    #     "category"
-    #
-    # Calculate:
-    #
-    #     total_sales
-    #     total_profit
-    #     total_quantity
-    #     total_orders
-    #
-    # Then sort by total_sales from highest to lowest.
-    #
-    # Hint:
-    # Copy the region_summary pattern above and modify it.
-    #
-    # Replace this empty DataFrame when you complete it.
 
+    category_summary["total_sales","total_profit","profit_margin"] = category_summary["total_sales","total_profit","profit_margin"].round(2)
+    
     category_summary = pd.DataFrame(
         columns=[
             "category",
