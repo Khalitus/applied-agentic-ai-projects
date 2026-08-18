@@ -86,15 +86,15 @@ class BusinessReport(BaseModel):
     key_insights: list[str] = Field(
         description="Important insights supported by the supplied statistics"
     )
+    risks: list[str] = Field(
+    description="Potential business risks or concerns supported by the supplied data"
+    )
 
     recommendations: list[str] = Field(
         description="Practical management recommendations based on the analysis"
     )
 
-
-
 # LOAD and INSPECT THE FULL DATASET
-
 
 def load_data(file_path):
     """Load the complete CSV and perform basic validation."""
@@ -432,7 +432,8 @@ Based on this data:
 2. Identify the strongest area.
 3. Identify the weakest area.
 4. Identify important business insights.
-5. Give practical management recommendations.
+5. Identify important risks or concerns.
+6. Give practical management recommendations.
 
 {format_instructions}
 """,
