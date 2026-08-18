@@ -1,0 +1,25 @@
+._*
+.DS_Store
+# Environment variables (contains sensitive API keys)
+.env
+.env.local
+.env.*.local
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# IDE configurations
+.vscode/
+.idea/
