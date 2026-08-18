@@ -328,39 +328,37 @@ def analyze_data(df):
         ["total_sales", "total_profit", "profit_margin"]
     ].round(2)
 
+        # Category analysis using groupby()
+
     category_summary = (
-        df.groupby("region", as_index=False)
+        df
+        .groupby("category", as_index=False)
         .agg(
-            total_sales=("profit","sum"),
-            total_profit=("profit","sum"),
-            total_quantity=("quantity","sum"),
-            total_orders=("order_id","nunique"),
+            total_sales=("sales", "sum"),
+            total_profit=("profit", "sum"),
+            total_quantity=("quantity", "sum"),
+            total_orders=("order_id", "nunique"),
         )
         .sort_values(
-            "total_sales"
-            ,ascending=False
+            "total_sales",
+            ascending=False
         )
     )
 
     category_summary["profit_margin"] = np.where(
-        category_summary["total_sales"]!=0,
+        category_summary["total_sales"] != 0,
         (
-        category_summary["total_profit"]/category_summary[total_sales]
-        )*100,
+            category_summary["total_profit"]
+            / category_summary["total_sales"]
+        ) * 100,
         np.nan
     )
 
-    category_summary["total_sales","total_profit","profit_margin"] = category_summary["total_sales","total_profit","profit_margin"].round(2)
-    
-    category_summary = pd.DataFrame(
-        columns=[
-            "category",
-            "total_sales",
-            "total_profit",
-            "total_quantity",
-            "total_orders",
-        ]
-    )
+    category_summary[
+        ["total_sales", "total_profit", "profit_margin"]
+    ] = category_summary[
+        ["total_sales", "total_profit", "profit_margin"]
+    ].round(2)
 
     return kpis, region_summary, category_summary
 
