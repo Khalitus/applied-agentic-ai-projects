@@ -14,14 +14,14 @@ import numpy as np
 # # Get Gemini API key from environment variables
 # gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-# # 1. Define desired data structure using Pydantic
+# # desired data structure using Pydantic
 # class TopicResearch(BaseModel):
 #     topic: str = Field(description="The main subject of the research")
 #     summary: str = Field(description="A brief two-sentence summary")
 #     keywords: list[str] = Field(description="List of 3 related keywords")
 
 
-# # 2. Initialize model and parser
+# # Initialize model and parser
 # # Configure temperature, top_k, top_p, and the API key here
 # model = ChatGoogleGenerativeAI(
 #     model="gemini-1.5-flash",  # You can also use "gemini-1.5-pro" or "gemini-2.0-flash"
@@ -33,29 +33,27 @@ import numpy as np
 
 # parser = JsonOutputParser(pydantic_object=TopicResearch)
 
-# # 3. Setup prompt with format instructions
+# #prompt setup with format instructions
 # prompt = PromptTemplate(
 #     template="Answer the user query.\n{format_instructions}\nQuery: {query}\n",
 #     input_variables=["query"],
 #     partial_variables={"format_instructions": parser.get_format_instructions()},
 # )
 
-# # 4. Create chain and invoke
+# # chain and invoke
 # chain = prompt | model | parser
 
 # result = chain.invoke({"query": "Artificial Intelligence in healthcare"})
 # print(result)
 
-# ============================================================
-# PROJECT 1: AI-POWERED BUSINESS DATA EXPLORER
-# ============================================================
+
 
 CSV_FILE = "fake_retail_sales_messy.csv"
 CLEANED_CSV_FILE = "cleaned_retail_sales.csv"
 REPORT_FILE = "business_report.json"
 
 
-# Columns that our project expects to find in the CSV
+# Columns that the project needs to find in the CSV
 REQUIRED_COLUMNS = [
     "order_id",
     "order_date",
@@ -70,9 +68,7 @@ REQUIRED_COLUMNS = [
 ]
 
 
-# ============================================================
-# 1. STRUCTURE FOR THE AI REPORT
-# ============================================================
+# STRUCTURE FOR THE AI REPORT
 
 class BusinessReport(BaseModel):
     executive_summary: str = Field(
@@ -96,9 +92,9 @@ class BusinessReport(BaseModel):
     )
 
 
-# ============================================================
-# 2. LOAD + BASICALLY INSPECT THE FULL DATASET
-# ============================================================
+
+# LOAD and INSPECT THE FULL DATASET
+
 
 def load_data(file_path):
     """Load the complete CSV and perform basic validation."""
@@ -134,29 +130,21 @@ def load_data(file_path):
 
     return df
 
-
-# ============================================================
-# 3. CLEAN THE DATA
-# ============================================================
+#data cleaning
 
 def clean_data(df):
     """Clean the main issues in the retail dataset."""
 
-    # We make a copy so we do not accidentally change the original DataFrame
+    # making a copy so we do not accidentally change the original DataFrame
     df = df.copy()
 
     original_rows = len(df)
 
-    # ----------------------------
-    # Clean column names
-    # ----------------------------
+    # Cleaning column names
 
     df.columns = df.columns.str.strip().str.lower()
 
-
-    # ----------------------------
-    # Clean text columns
-    # ----------------------------
+    # Cleaning text columns
 
     text_columns = [
         "region",
@@ -168,33 +156,18 @@ def clean_data(df):
     for column in text_columns:
         df[column] = df[column].astype("string").str.strip()
 
-
-    # Standardize capitalization
-    # "karachi", "KARACHI", " Karachi "
-    # all become "Karachi"
-
+    # Standardizing capitalization
+    
     df["region"] = df["region"].str.title()
     df["category"] = df["category"].str.title()
     df["product"] = df["product"].str.title()
 
-
-    # Fill missing text values
+    # Filling missing text values
     df["region"] = df["region"].fillna("Unknown")
     df["category"] = df["category"].fillna("Unknown")
     df["customer"] = df["customer"].fillna("Unknown")
-
-
-    # ----------------------------
-    # Clean numeric columns
-    # ----------------------------
-
-    # Some sales values look like:
-    # 125,000.00
-    #
-    # Some cost values look like:
-    # PKR 85,000.00
-    #
-    # Pandas may therefore treat the column as text.
+    
+    # Cleaning numeric columns
 
     for column in ["sales", "cost"]:
 
@@ -223,29 +196,19 @@ def clean_data(df):
         errors="coerce"
     )
 
-
-    # ----------------------------
-    # Remove duplicate rows
-    # ----------------------------
+    # Removing duplicate rows
 
     df = df.drop_duplicates()
 
 
-    # ----------------------------
-    # Remove unusable financial rows
-    # ----------------------------
-
-    # If sales/cost/quantity are missing,
-    # we cannot reliably calculate our business KPIs.
+    # Removing unusable financial rows
 
     df = df.dropna(
         subset=["sales", "cost", "quantity"]
     )
 
 
-    # Basic human/business logic:
-    # negative or zero sales/quantity do not make sense
-    # for this simple sales dataset.
+    # Basic business logic:
 
     df = df[
         (df["sales"] > 0)
@@ -254,9 +217,7 @@ def clean_data(df):
     ]
 
 
-    # ----------------------------
-    # Feature engineering
-    # ----------------------------
+    # Adding new features
 
     df["profit"] = df["sales"] - df["cost"]
 
@@ -279,10 +240,7 @@ def clean_data(df):
 
     return df
 
-
-# ============================================================
-# 4. BUSINESS ANALYSIS
-# ============================================================
+# BUSINESS ANALYSIS
 
 def analyze_data(df):
     """Calculate deterministic business metrics using Pandas."""
@@ -305,10 +263,7 @@ def analyze_data(df):
         else 0
     )
 
-
-    # ----------------------------
     # Overall KPIs
-    # ----------------------------
 
     kpis = {
         "total_orders": int(total_orders),
@@ -338,17 +293,7 @@ def analyze_data(df):
         ),
     }
 
-
-    # ----------------------------
-    # Region analysis
-    # ----------------------------
-
-    # Study this carefully.
-    #
-    # We:
-    # 1. group rows by region
-    # 2. calculate several metrics
-    # 3. sort highest sales first
+    # Region analysis using groupby()
 
     region_summary = (
         df
@@ -365,7 +310,6 @@ def analyze_data(df):
         )
     )
 
-
     region_summary["profit_margin"] = np.where(
         region_summary["total_sales"] != 0,
 
@@ -377,17 +321,15 @@ def analyze_data(df):
         np.nan
     )
 
-
     # Round values so the AI receives cleaner numbers
     region_summary[
         ["total_sales", "total_profit", "profit_margin"]
     ] = region_summary[
         ["total_sales", "total_profit", "profit_margin"]
     ].round(2)
-
-
+    
     # ========================================================
-    # YOUR 30% — TODO 1
+    # YOUR 30% 
     # ========================================================
     #
     # Build category_summary yourself.
@@ -421,13 +363,9 @@ def analyze_data(df):
         ]
     )
 
-
     return kpis, region_summary, category_summary
 
-
-# ============================================================
-# 5. GENERATE AI BUSINESS INSIGHTS
-# ============================================================
+# GENERATING AI BUSINESS INSIGHTS
 
 def generate_ai_report(
     kpis,
@@ -444,10 +382,6 @@ def generate_ai_report(
         raise ValueError(
             "GEMINI_API_KEY was not found in the .env file."
         )
-
-
-    # Gemini interprets the numbers.
-    # Gemini does NOT calculate our core financial metrics.
 
     model = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
@@ -542,9 +476,7 @@ Based on this data:
     return result
 
 
-# ============================================================
-# 6. SAVE OUTPUTS
-# ============================================================
+# 6. SAVING THE OUTPUTS
 
 def save_results(df, ai_report):
     """Save cleaned data and the AI-generated report."""
@@ -575,9 +507,7 @@ def save_results(df, ai_report):
     print(REPORT_FILE)
 
 
-# ============================================================
-# 7. MAIN PROGRAM
-# ============================================================
+# MAIN PROGRAM
 
 def main():
 
@@ -617,10 +547,6 @@ def main():
                 index=False
             )
         )
-
-
-        # Don't call Gemini until you complete
-        # your category_summary TODO.
 
         if category_summary.empty:
 
@@ -671,6 +597,5 @@ def main():
         print(error)
 
 
-# Run main only when this file is executed directly
 if __name__ == "__main__":
     main()
