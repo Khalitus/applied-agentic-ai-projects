@@ -375,6 +375,9 @@ Do not invent:
 - percentages
 - trends that are not supported by the data
 
+Do not calculate new percentages or ratios yourself.
+Only use percentages that are explicitly supplied in the statistics.
+
 If some analysis is missing, simply do not make claims about it.
 
 OVERALL BUSINESS KPIs:
