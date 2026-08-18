@@ -341,7 +341,14 @@ def analyze_data(df):
             ,ascending=False
         )
     )
-    
+
+    category_summary["profit_margin"] = np.where(
+        category_summary["total_sales"]!=0,
+        (
+        category_summary["total_profit"]/category_summary[total_sales]
+        )*100,
+        np.nan
+    )
     # ========================================================
     # YOUR 30% 
     # ========================================================
