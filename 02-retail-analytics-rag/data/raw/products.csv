@@ -1,0 +1,13 @@
+product_id,product_name,category,list_price,unit_cost,supplier,warranty_months
+P001,Aero Wireless Mouse,Accessories,4200,2550,Vector Supplies,12
+P002,Pulse Mechanical Keyboard,Accessories,8500,5100,Vector Supplies,12
+P003,Nova USB-C Hub,Accessories,6200,3650,Orbit Trade,12
+P004,Vertex 24in Monitor,Displays,39500,29200,PixelWorks,24
+P005,Vertex 27in Monitor,Displays,58500,43100,PixelWorks,24
+P006,Nimbus Office Laptop,Computers,168000,135000,CoreTech,24
+P007,Nimbus Pro Laptop,Computers,248000,197000,CoreTech,24
+P008,Arc Mini PC,Computers,132000,101000,CoreTech,18
+P009,Echo ANC Headset,Audio,18500,11200,Sonic Distribution,12
+P010,Echo Conference Speaker,Audio,27500,17800,Sonic Distribution,12
+P011,Vault 1TB SSD,Storage,21500,14800,Orbit Trade,36
+P012,Vault 2TB SSD,Storage,36500,25800,Orbit Trade,36
