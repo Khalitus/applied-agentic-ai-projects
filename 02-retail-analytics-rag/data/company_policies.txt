@@ -1,0 +1,91 @@
+NORTHSTAR RETAIL — COMPANY POLICIES
+Effective date: 1 January 2025
+
+==================================================
+1. RETURNS AND REFUNDS POLICY
+==================================================
+
+Standard return window:
+Customers may return unopened Accessories, Audio, Displays, and Storage products within 14 calendar days of delivery when proof of purchase is available.
+
+Computers:
+Computers may be returned within 7 calendar days of delivery only when the product is unopened and the factory seal is intact.
+
+Defective items:
+A product reported as defective within 7 calendar days must first be verified by technical support. If the defect is confirmed, the customer may receive a replacement or refund.
+
+Opened products:
+Opened non-defective products are generally not eligible for a cash refund. A store credit may be approved by a customer service supervisor when the item is in resalable condition.
+
+Final-sale items:
+Clearance items explicitly marked FINAL SALE are not returnable unless defective.
+
+Refund timing:
+Approved card and digital-wallet refunds are normally initiated within 3 business days.
+Bank-transfer refunds may take up to 5 business days after approval.
+
+==================================================
+2. SHIPPING AND DELIVERY POLICY
+==================================================
+
+Standard delivery targets:
+South region: 2 to 3 business days.
+Central region: 2 to 4 business days.
+North region: 3 to 4 business days.
+West region: 4 to 6 business days.
+
+Corporate orders:
+Corporate orders containing five or more computers require stock confirmation before a delivery commitment is made.
+
+Delayed shipments:
+A shipment is considered delayed when delivery exceeds the upper end of the regional target by more than one business day. Delays must be escalated to Operations.
+
+Same-day retail pickup:
+Orders marked Retail Store are treated as store pickup and normally have zero delivery days.
+
+Customer communication:
+For confirmed delays, customers should receive an updated delivery estimate and a reason for the delay.
+
+==================================================
+3. DISCOUNT AUTHORIZATION POLICY
+==================================================
+
+Standard discounts:
+Sales representatives may approve discounts up to 5 percent without additional approval.
+
+Manager approval:
+Discounts above 5 percent and up to 10 percent require Sales Manager approval.
+
+Commercial approval:
+Discounts above 10 percent and up to 15 percent require Commercial Head approval.
+
+Maximum normal discount:
+The normal maximum discount is 15 percent.
+
+Exceptions:
+Any exception above 15 percent requires a written exception approved by the Finance Director.
+
+Enterprise pricing:
+Enterprise orders may use negotiated pricing, but approval level is still determined by the effective discount percentage.
+
+Audit requirement:
+The approver and reason for any discount above 5 percent must be recorded.
+
+==================================================
+4. CUSTOMER SERVICE PLAYBOOK
+==================================================
+
+Low ratings:
+Orders with a customer rating of 2 or below should be reviewed by Customer Experience within two business days.
+
+Returned orders:
+Customer service must record a return reason and link the case to the original order ID.
+
+Escalation:
+Repeated delivery complaints involving the same region, supplier, or product family should be summarized and escalated to Operations.
+
+Evidence:
+When answering customer questions about policy, staff should quote or reference the relevant policy document rather than relying on memory.
+
+Data privacy:
+Customer names, phone numbers, addresses, and payment credentials must never be added to analytics exports used for training or demonstration purposes.
