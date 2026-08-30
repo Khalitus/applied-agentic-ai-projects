@@ -334,6 +334,31 @@ def recent_orders():
     """
 
     return run_query(query)
+
+def south_online_orders():
+    """Return online orders from the South region."""
+
+    query = """
+    SELECT
+        order_id,
+        order_date,
+        city,
+        customer_segment,
+        product_id,
+        quantity,
+        unit_price
+
+    FROM orders
+
+    WHERE
+        region = 'South'
+        AND
+        channel = 'Online'
+
+    ORDER BY order_date DESC
+    """
+
+    return run_query(query)
 # FUTURE TASKS
 
 
