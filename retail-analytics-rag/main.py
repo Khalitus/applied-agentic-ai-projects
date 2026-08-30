@@ -6,7 +6,8 @@ from sql_analysis import (
     create_database,
     verify_database,
     get_overall_kpis,
-    sales_by_region
+    sales_by_region,
+    recent_orders
 )
 
 from visualization import (
@@ -74,6 +75,8 @@ def main():
 
     print("\nOverall KPIs:")
     print(kpis)
+
+    
 
 
     # REGION ANALYSIS

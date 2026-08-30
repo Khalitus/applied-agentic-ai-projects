@@ -312,7 +312,28 @@ def sales_by_region():
     return run_query(query)
 
 
+def recent_orders():
+    """Return the 10 most recent orders."""
 
+    query = """
+    SELECT
+        order_id,
+        order_date,
+        region,
+        city,
+        channel,
+        product_id,
+        quantity,
+        unit_price
+
+    FROM orders
+
+    ORDER BY order_date DESC
+
+    LIMIT 10
+    """
+
+    return run_query(query)
 # FUTURE TASKS
 
 
