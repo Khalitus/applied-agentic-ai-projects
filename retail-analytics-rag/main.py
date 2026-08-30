@@ -11,7 +11,8 @@ from sql_analysis import (
     south_online_orders,
     high_discount_orders,
     largest_orders,
-    low_rated_orders
+    low_rated_orders,
+    region_performance
 )
 
 from visualization import (
