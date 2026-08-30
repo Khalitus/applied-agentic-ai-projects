@@ -1,117 +1,113 @@
-import gradio as gr
-
 from sql_analysis import (
     load_data,
+    clean_data,
     create_database,
-    run_query
+    get_overall_kpis,
+    sales_by_region
 )
 
-from visualization import sales_by_region_chart
+from visualization import (
+    plot_sales_by_region,
+    save_chart
+)
 
-from rag_llm import ask_policy
-
-
-# -------------------------
-# SETUP DATA
-# -------------------------
-
-df = load_data("data/retail_orders.csv")
-
-create_database(df)
+from rag_llm import (
+    load_policy,
+    split_policy
+)
 
 
-# -------------------------
-# SQL
-# -------------------------
+# MAIN PROGRAM
 
-def sql_section(query):
+def main():
 
-    try:
-        return run_query(query)
-
-    except Exception as error:
-        return str(error)
+    print("\n=== RETAIL ANALYTICS + RAG ===\n")
 
 
-# -------------------------
-# VISUALIZATION
-# -------------------------
+    # LOAD DATA
 
-def visualization_section():
+    orders, products = load_data()
 
-    query = """
-    SELECT
-        region,
-        SUM(quantity * unit_price) AS sales
-    FROM orders
-    GROUP BY region
-    """
-
-    result = run_query(query)
-
-    return sales_by_region_chart(result)
+    print("Orders loaded:", len(orders))
+    print("Products loaded:", len(products))
 
 
-# -------------------------
-# GRADIO
-# -------------------------
+    # CLEAN DATA
 
-with gr.Blocks() as app:
-
-    gr.Markdown(
-        "# Retail Analytics + RAG Assistant"
+    orders, products = clean_data(
+        orders,
+        products
     )
 
-    with gr.Tab("SQL"):
-
-        sql_input = gr.Textbox(
-            label="SQL Query"
-        )
-
-        sql_button = gr.Button(
-            "Run Query"
-        )
-
-        sql_output = gr.Dataframe()
-
-        sql_button.click(
-            sql_section,
-            inputs=sql_input,
-            outputs=sql_output
-        )
+    print("Data cleaning complete.")
 
 
-    with gr.Tab("Visualization"):
+    # CREATE SQL DATABASE
 
-        chart_button = gr.Button(
-            "Generate Chart"
-        )
+    create_database(
+        orders,
+        products
+    )
 
-        chart_output = gr.Plot()
-
-        chart_button.click(
-            visualization_section,
-            outputs=chart_output
-        )
+    print("SQLite database created.")
 
 
-    with gr.Tab("Policy RAG"):
+    # KPI ANALYSIS
 
-        question = gr.Textbox(
-            label="Ask a policy question"
-        )
+    kpis = get_overall_kpis()
 
-        rag_button = gr.Button(
-            "Ask"
-        )
-
-        answer = gr.Textbox()
-
-        rag_button.click(
-            ask_policy,
-            inputs=question,
-            outputs=answer
-        )
+    print("\nOverall KPIs:")
+    print(kpis)
 
 
-app.launch()
+    # REGION ANALYSIS
+
+    region_sales = sales_by_region()
+
+    print("\nSales by region:")
+    print(region_sales)
+
+
+    # VISUALIZATION
+
+    figure = plot_sales_by_region(
+        region_sales
+    )
+
+    chart_path = save_chart(
+        figure,
+        "sales_by_region.png"
+    )
+
+    print(
+        "\nChart saved:",
+        chart_path
+    )
+
+
+    # RAG PREPROCESSING
+    
+    documents = load_policy()
+
+    chunks = split_policy(
+        documents
+    )
+
+    print(
+        "\nPolicy chunks created:",
+        len(chunks)
+    )
+
+    print(
+        "\nFirst chunk preview:"
+    )
+
+    print(
+        chunks[0].page_content[:300]
+    )
+
+
+# RUN PROGRAM
+
+if __name__ == "__main__":
+    main()
