@@ -549,6 +549,29 @@ def large_customer_segments():
 
     return run_query(query)
 
+def slow_regions():
+    """Return regions averaging more than 2 delivery days."""
+
+    query = """
+    SELECT
+        region,
+
+        ROUND(
+            AVG(delivery_days),
+            2
+        ) AS average_delivery_days
+
+    FROM orders
+
+    GROUP BY region
+
+    HAVING average_delivery_days > 2
+
+    ORDER BY average_delivery_days DESC
+    """
+
+    return run_query(query)
+
 def monthly_sales():
     pass
 

@@ -14,7 +14,8 @@ from sql_analysis import (
     low_rated_orders,
     region_performance,
     channel_performance,
-    large_customer_segments
+    large_customer_segments,
+    slow_regions
 )
 
 from visualization import (
