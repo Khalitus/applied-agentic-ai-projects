@@ -10,7 +10,8 @@ from sql_analysis import (
     recent_orders,
     south_online_orders,
     high_discount_orders,
-    largest_orders
+    largest_orders,
+    low_rated_orders
 )
 
 from visualization import (
