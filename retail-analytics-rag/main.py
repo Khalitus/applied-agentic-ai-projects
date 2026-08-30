@@ -7,7 +7,8 @@ from sql_analysis import (
     verify_database,
     get_overall_kpis,
     sales_by_region,
-    recent_orders
+    recent_orders,
+    south_online_orders
 )
 
 from visualization import (
@@ -76,7 +77,7 @@ def main():
     print("\nOverall KPIs:")
     print(kpis)
 
-    
+
 
 
     # REGION ANALYSIS
