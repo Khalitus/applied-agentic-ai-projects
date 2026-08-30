@@ -1,7 +1,10 @@
 from sql_analysis import (
     load_data,
+    inspect_data,
     clean_data,
+    validate_data,
     create_database,
+    verify_database,
     get_overall_kpis,
     sales_by_region
 )
@@ -20,37 +23,50 @@ from rag_llm import (
 # MAIN PROGRAM
 
 def main():
+    print(
+        "\n=== RETAIL ANALYTICS + RAG ===\n"
+    )
 
-    print("\n=== RETAIL ANALYTICS + RAG ===\n")
-
-
-    # LOAD DATA
+    # LOAD
 
     orders, products = load_data()
 
-    print("Orders loaded:", len(orders))
-    print("Products loaded:", len(products))
+    # INSPECT RAW DATA
 
+    inspect_data(
+        orders,
+        products
+    )
 
-    # CLEAN DATA
+    # CLEAN
 
     orders, products = clean_data(
         orders,
         products
     )
 
-    print("Data cleaning complete.")
+    # VALIDATE
+
+    validate_data(
+        orders,
+        products
+    )
 
 
-    # CREATE SQL DATABASE
+
+    # CREATE DATABASE
+
 
     create_database(
         orders,
         products
     )
 
-    print("SQLite database created.")
 
+
+    # VERIFY DATABASE
+
+    verify_database()
 
     # KPI ANALYSIS
 
@@ -86,7 +102,7 @@ def main():
 
 
     # RAG PREPROCESSING
-    
+
     documents = load_policy()
 
     chunks = split_policy(
