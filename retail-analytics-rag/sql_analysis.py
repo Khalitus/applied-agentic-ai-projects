@@ -572,6 +572,26 @@ def slow_regions():
 
     return run_query(query)
 
+def city_order_summary():
+    """Returns cities with the largest number of orders."""
+    query = (
+        """
+        SELECT
+            city,
+            COUNT(*) AS total_orders,
+            SUM(quantity) AS units_sold,
+            AVG(delivery_days) AS average_delivery_days
+        
+        FROM orders
+
+        GROUP BY city
+
+        ORDER BY COUNT(*) DESC
+        """
+    )
+    
+    return run_query(query)
+
 def monthly_sales():
     pass
 
