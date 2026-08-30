@@ -359,6 +359,32 @@ def south_online_orders():
     """
 
     return run_query(query)
+
+def high_discount_orders():
+    """Return orders with discounts of 10% or higher."""
+
+    query = """
+    SELECT
+        order_id,
+        order_date,
+        region,
+        channel,
+        customer_segment,
+        product_id,
+        quantity,
+        unit_price,
+        discount_pct
+
+    FROM orders
+
+    WHERE
+        discount_pct >= 0.10
+
+    ORDER BY
+        discount_pct DESC
+    """
+
+    return run_query(query)
 # FUTURE TASKS
 
 

@@ -8,7 +8,8 @@ from sql_analysis import (
     get_overall_kpis,
     sales_by_region,
     recent_orders,
-    south_online_orders
+    south_online_orders,
+    high_discount_orders
 )
 
 from visualization import (
