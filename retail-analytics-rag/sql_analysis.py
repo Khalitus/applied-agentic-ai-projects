@@ -415,6 +415,28 @@ def largest_orders():
     """
 
     return run_query(query)
+
+def low_rated_orders():
+    """Return orders with a rating of 2 or lower."""
+
+    query = """
+    SELECT 
+        order_id,
+        region,
+        city,
+        rating,
+        delivery_days
+
+    FROM orders
+
+    WHERE
+        rating <= 2
+    
+    ORDER BY
+        rating
+    """
+    return run_query(query)
+
 # FUTURE TASKS
 
 
