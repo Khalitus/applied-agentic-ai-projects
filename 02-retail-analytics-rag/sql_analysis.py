@@ -437,8 +437,48 @@ def low_rated_orders():
     """
     return run_query(query)
 
-# FUTURE TASKS
+def region_performance():
+    """Summarize sales performance for each region."""
 
+    query = """
+    SELECT
+        region,
+
+        COUNT(*) AS total_orders,
+
+        SUM(quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS total_sales,
+
+        ROUND(
+            AVG(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS average_order_value,
+
+        ROUND(
+            AVG(delivery_days),
+            2
+        ) AS average_delivery_days
+
+    FROM orders
+
+    GROUP BY region
+
+    ORDER BY total_sales DESC
+    """
+
+    return run_query(query)
 
 def monthly_sales():
     pass
