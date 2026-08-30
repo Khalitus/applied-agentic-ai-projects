@@ -9,7 +9,8 @@ from sql_analysis import (
     sales_by_region,
     recent_orders,
     south_online_orders,
-    high_discount_orders
+    high_discount_orders,
+    largest_orders
 )
 
 from visualization import (

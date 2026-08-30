@@ -385,6 +385,36 @@ def high_discount_orders():
     """
 
     return run_query(query)
+
+def largest_orders():
+    """Return the 10 largest individual order values."""
+
+    query = """
+    SELECT
+        order_id,
+        order_date,
+        region,
+        product_id,
+        quantity,
+        unit_price,
+        discount_pct,
+
+        ROUND(
+            quantity
+            * unit_price
+            * (1 - discount_pct),
+            2
+        ) AS order_value
+
+    FROM orders
+
+    ORDER BY
+        order_value DESC
+
+    LIMIT 10
+    """
+
+    return run_query(query)
 # FUTURE TASKS
 
 
