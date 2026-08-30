@@ -13,7 +13,8 @@ from sql_analysis import (
     largest_orders,
     low_rated_orders,
     region_performance,
-    channel_performance
+    channel_performance,
+    large_customer_segments
 )
 
 from visualization import (

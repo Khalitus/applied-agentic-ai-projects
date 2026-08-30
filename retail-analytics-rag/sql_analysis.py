@@ -518,6 +518,37 @@ def channel_performance():
 
     return run_query(query)
 
+def large_customer_segments():
+    """Return customer segments with more than 200 orders."""
+
+    query = """
+    SELECT
+        customer_segment,
+
+        COUNT(*) AS total_orders,
+
+        SUM(quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS total_sales
+
+    FROM orders
+
+    GROUP BY customer_segment
+
+    HAVING COUNT(*) > 200
+
+    ORDER BY total_orders DESC
+    """
+
+    return run_query(query)
+
 def monthly_sales():
     pass
 
