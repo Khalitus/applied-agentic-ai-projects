@@ -480,6 +480,44 @@ def region_performance():
 
     return run_query(query)
 
+def channel_performance():
+    """Summarize performance by sales channel."""
+
+    query = """
+    SELECT
+        channel,
+
+        COUNT(*) AS total_orders,
+
+        SUM(quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS total_sales,
+
+        ROUND(
+            AVG(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS average_order_value
+
+    FROM orders
+
+    GROUP BY channel
+
+    ORDER BY total_sales DESC
+    """
+
+    return run_query(query)
+
 def monthly_sales():
     pass
 
