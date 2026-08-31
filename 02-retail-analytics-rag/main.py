@@ -20,7 +20,9 @@ from sql_analysis import (
     joined_order_sample,
     product_profitability,
     category_profitability,
-    supplier_summary
+    supplier_summary,
+    monthly_sales,
+    return_rate_by_category
 )
 
 from visualization import (
