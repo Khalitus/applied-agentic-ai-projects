@@ -7,3 +7,5 @@ __pycache__/
 retail.db
 
 .DS_Store
+data/chroma_db/
+data/retail.db/
