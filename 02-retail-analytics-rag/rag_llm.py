@@ -76,3 +76,26 @@ def inspect_embedding(embeddings, text):
     print("First 5 values:", vector[:5])
 
     return vector
+
+def create_vector_store(chunks):
+    """Store policy chunks in Chroma."""
+
+    embeddings = create_embeddings()
+
+    vector_store = Chroma(
+        collection_name=COLLECTION_NAME,
+        embedding_function=embeddings,
+        persist_directory=str(VECTOR_DB_PATH)
+    )
+
+    ids = [
+        f"policy-{chunk.metadata['chunk_id']}"
+        for chunk in chunks
+    ]
+
+    vector_store.add_documents(
+        documents=chunks,
+        ids=ids
+    )
+
+    return vector_store
