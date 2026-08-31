@@ -37,15 +37,7 @@ from visualization import (
 )
 
 from rag_llm import (
-    load_policy,
-    split_policy,
-    add_chunk_metadata,
-    create_embeddings,
-    create_vector_store,
-    load_vector_store,
-    create_retriever,
-    retrieve_policy_context,
-    inspect_retrieval
+    ask_policy
 )
 
 
@@ -141,31 +133,18 @@ def main():
     )
     # RAG PREPROCESSING
 
-    documents = load_policy()
+    question = "Who approves a 12 percent discount?"
 
-    chunks = split_policy(documents)
-
-    chunks = add_chunk_metadata(chunks)
-
-    vector_store = load_vector_store()
-
-    retriever = create_retriever(
-        vector_store,
-        k=3
-    )
-
-    question = (
-        "Who approves a 12 percent discount?"
-    )
-
-    documents = retrieve_policy_context(
-        retriever,
+    answer = ask_policy(
         question
     )
 
-    inspect_retrieval(
-        documents
-    )
+    print("\nQuestion:")
+    print(question)
+
+    print("\nAnswer:")
+    print(answer)
+    
 # RUN PROGRAM
 
 if __name__ == "__main__":
