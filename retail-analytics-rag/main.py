@@ -17,7 +17,8 @@ from sql_analysis import (
     large_customer_segments,
     slow_regions,
     city_order_summary,
-    joined_order_sample
+    joined_order_sample,
+    product_profitability
 )
 
 from visualization import (

@@ -621,10 +621,62 @@ def joined_order_sample():
 def monthly_sales():
     pass
 
-
 def product_profitability():
-    pass
+    """Summarize sales and profit for each product."""
 
+    query = """
+    SELECT
+        p.product_id,
+        p.product_name,
+        p.category,
+
+        COUNT(*) AS total_orders,
+
+        SUM(o.quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1 - o.discount_pct)
+            ),
+            2
+        ) AS total_sales,
+
+        ROUND(
+            SUM(
+                o.quantity 
+                * p.unit_cost
+            ),
+            2
+        ) AS total_cost,
+
+        ROUND(
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1-discount_pct)
+                -
+                o.quantity
+                * p.unit_cost
+            ),
+            2
+        ) AS total_profit
+
+    FROM orders AS o
+
+    INNER JOIN products AS p
+        ON o.product_id = p.product_id
+
+    GROUP BY
+        p.product_id,
+        p.product_name,
+        p.category
+
+    ORDER BY total_profit DESC
+    """
+
+    return run_query(query)
 
 def return_rate_by_category():
     pass
