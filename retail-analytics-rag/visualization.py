@@ -136,9 +136,29 @@ def plot_discount_vs_order_value(orders):
     return fig
 
 
-def plot_rating_distribution(df):
-    # histogram
-    pass
+def plot_rating_distribution(orders):
+    """Plot the distribution of customer ratings."""
+
+    data = orders.dropna(
+        subset=["rating"]
+    )
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    sns.histplot(
+        data=data,
+        x="rating",
+        bins=5,
+        ax=ax
+    )
+
+    ax.set_title("Customer rating distribution")
+    ax.set_xlabel("Rating")
+    ax.set_ylabel("Number of orders")
+    ax.set_xlim(1, 5)
+
+    fig.tight_layout()
+    return fig
 
 
 def plot_region_category_heatmap(df):
