@@ -592,6 +592,32 @@ def city_order_summary():
     
     return run_query(query)
 
+def joined_order_sample():
+    """Show sample orders combined with product information."""
+
+    query = """
+    SELECT
+        o.order_id,
+        o.order_date,
+        o.product_id,
+
+        p.product_name,
+        p.category,
+
+        o.quantity,
+        o.unit_price,
+        p.unit_cost
+
+    FROM orders AS o
+
+    INNER JOIN products AS p
+        ON o.product_id = p.product_id
+
+    LIMIT 10
+    """
+
+    return run_query(query)
+
 def monthly_sales():
     pass
 
