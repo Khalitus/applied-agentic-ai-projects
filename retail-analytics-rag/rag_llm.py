@@ -109,3 +109,13 @@ def inspect_vector_store(vector_store):
     print("IDs:", stored["ids"])
 
     return stored
+
+def load_vector_store():
+    """Load the existing Chroma vector store."""
+    embeddings = create_embeddings()
+
+    return Chroma(
+        collection_name=COLLECTION_NAME,
+        embedding_function=embeddings,
+        persist_directory=str(VECTOR_DB_PATH)
+    )
