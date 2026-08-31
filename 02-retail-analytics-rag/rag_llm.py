@@ -130,3 +130,23 @@ def create_retriever(vector_store, k=3):
 def retrieve_policy_context(retriever, question):
     """Retrieve policy chunks relevant to a question."""
     return retriever.invoke(question)
+
+def inspect_retrieval(documents):
+    """Display retrieved policy chunks."""
+
+    print("\n=== Retrieved context ===")
+
+    for index, document in enumerate(
+        documents,
+        start=1
+    ):
+        print(f"\nResult {index}")
+        print(
+            "Chunk:",
+            document.metadata.get("chunk_id")
+        )
+        print(
+            "Source:",
+            document.metadata.get("source_name")
+        )
+        print(document.page_content)
