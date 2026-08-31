@@ -317,14 +317,13 @@ discount approvals, and customer service policies.
                 inputs=policy_question,
                 outputs=policy_answer
             )
-# MAIN PROGRAM
+    return app
+
 
 def main():
-    print(
-        "\n=== RETAIL ANALYTICS + RAG ===\n"
-    )
+    app = build_app()
+    app.launch()
 
-# RUN PROGRAM
 
 if __name__ == "__main__":
     main()
