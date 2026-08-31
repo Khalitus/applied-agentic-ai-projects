@@ -182,6 +182,31 @@ def create_llm():
         model=model_name
     )
 
+def collect_sources(documents):
+    """Collect unique source information from retrieved documents."""
+
+    sources = []
+    seen = set()
+
+    for document in documents:
+        source_name = document.metadata.get("source_name")
+        chunk_id = document.metadata.get("chunk_id")
+
+        key = (
+            source_name,
+            chunk_id
+        )
+
+        if key not in seen:
+            seen.add(key)
+
+            sources.append({
+                "source": source_name,
+                "chunk_id": chunk_id
+            })
+
+    return sources
+
 def build_prompt(context, question):
     """Build a grounded policy question-answering prompt."""
     return f"""
@@ -212,6 +237,14 @@ Answer:
 def ask_policy(question):
     """Answer a question using retrieved company policy context."""
 
+    question = question.strip()
+
+    if not question:
+        return {
+            "answer": "Please enter a policy question.",
+            "sources": []
+        }
+
     vector_store = load_vector_store()
 
     retriever = create_retriever(
@@ -239,4 +272,16 @@ def ask_policy(question):
         prompt
     )
 
-    return response.text
+    answer = response.text.strip()
+
+    if answer == UNKNOWN_ANSWER:
+        sources = []
+    else:
+        sources = collect_sources(
+            documents
+        )
+
+    return {
+        "answer": answer,
+        "sources": sources
+    }
