@@ -18,6 +18,9 @@ EMBEDDING_MODEL = (
 )
 
 COLLECTION_NAME = "company_policies"
+UNKNOWN_ANSWER = (
+    "I don't know based on the available company policies."
+)
 
 def load_policy():
     """Load the company policy document."""
@@ -186,11 +189,15 @@ You are a company policy assistant.
 
 Answer the question using only the provided policy context.
 
-If the answer is not contained in the context, say:
-"I don't know based on the available company policies."
+If the answer is not clearly supported by the context, respond exactly with:
+"{UNKNOWN_ANSWER}"
 
+Do not use outside knowledge.
 Do not invent policies, requirements, approval rules, or timelines.
-When a policy contains a specific number, percentage, approval level, or time period, preserve that value in the answer.
+
+When the policy contains a specific number, percentage, approval level,
+or time period, preserve that value in the answer.
+
 Keep the answer clear and concise.
 
 Context:
