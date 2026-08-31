@@ -770,5 +770,47 @@ def category_profitability():
 
     return run_query(query)
 
+def supplier_summary():
+    """Returns suppliers which contribute the most sales and profit"""
+
+    query = """
+        SELECT
+            p.supplier,
+
+            COUNT(*) AS total_orders,
+
+            SUM(o.quantity) AS units_sold,
+
+            ROUND(
+                SUM(
+                    o.quantity
+                    * o.unit_price
+                    * (1-o.discount_pct)
+                ),
+                2
+            ) AS total_sales,
+
+            ROUND(
+                SUM(
+                    o.quantity
+                    * o.unit_price
+                    * (1-o.discount_pct)
+                    -
+                    o.quantity 
+                    * p.unit_cost
+                ),
+                2
+            ) AS total_profit
+
+        FROM orders as o
+        INNER JOIN products as p
+            ON o.product_id = p.product_id
+
+        GROUP BY p.supplier
+
+        ORDER BY total_profit DESC
+    """
+    return run_query(query)
+
 def return_rate_by_category():
     pass
