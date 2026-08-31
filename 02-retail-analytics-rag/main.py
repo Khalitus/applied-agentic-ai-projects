@@ -145,6 +145,27 @@ def generate_chart(chart_name):
             return_rate_by_category()
         )
 
+def answer_policy_question(question):
+    """Answer a company policy question."""
+
+    try:
+        result = ask_policy(
+            question
+        )
+
+        return format_policy_result(
+            result
+        )
+
+    except Exception as error:
+        print(
+            f"Policy assistant error: {error}"
+        )
+
+        return (
+            "The policy assistant is "
+            "temporarily unavailable."
+        )
 # MAIN PROGRAM
 
 def main():
