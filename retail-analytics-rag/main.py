@@ -41,7 +41,49 @@ from rag_llm import (
     format_policy_result
 )
 
+def initialize_project():
+    """Prepare the datasets, database and RAG index."""
 
+    orders, products = load_data()
+    orders, products = clean_data(
+        orders,
+        products
+    )
+
+    validation = validate_data(
+        orders,
+        products
+    )
+
+    if any(validation.values()):
+        raise ValueError(
+            "Data validation failed."
+        )
+
+    create_database(
+        orders,
+        products
+    )
+
+    if (
+        not VECTOR_DB_PATH.exists()
+        or not any(VECTOR_DB_PATH.iterdir())
+    ):
+        documents = load_policy()
+
+        chunks = split_policy(
+            documents
+        )
+
+        chunks = add_chunk_metadata(
+            chunks
+        )
+
+        create_vector_store(
+            chunks
+        )
+
+    return orders, products
 # MAIN PROGRAM
 
 def main():
