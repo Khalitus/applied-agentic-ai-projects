@@ -57,8 +57,25 @@ def plot_sales_by_region(df):
     return fig
 
 def plot_monthly_sales(df):
-    # line chart
-    pass
+    """Plot monthly sales over time."""
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    sns.lineplot(
+        data=df,
+        x="month",
+        y="total_sales",
+        marker="o",
+        ax=ax
+    )
+
+    ax.set_title("Monthly net sales")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Net sales")
+    ax.tick_params(axis="x", rotation=45)
+
+    fig.tight_layout()
+    return fig
 
 
 def plot_discount_vs_order_value(df):
