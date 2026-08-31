@@ -1,14 +1,17 @@
+import os
 from pathlib import Path
 
-from langchain_community.document_loaders import TextLoader
-from langchain_text_splitters import CharacterTextSplitter
+from dotenv import load_dotenv
 from langchain_chroma import Chroma
+from langchain_community.document_loaders import TextLoader
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
-
+from langchain_text_splitters import CharacterTextSplitter
 
 BASE_DIR = Path(__file__).resolve().parent
 POLICY_PATH = BASE_DIR / "data" / "company_policies.txt"
 VECTOR_DB_PATH = BASE_DIR / "data" / "chroma_db"
+ENV_PATH = BASE_DIR / ".env.local"
 
 EMBEDDING_MODEL = (
     "sentence-transformers/all-MiniLM-L6-v2"
@@ -150,3 +153,10 @@ def inspect_retrieval(documents):
             document.metadata.get("source_name")
         )
         print(document.page_content)
+
+def format_context(documents):
+    """Combine retrieved documents into one context string."""
+    return "\n\n".join(
+        document.page_content
+        for document in documents
+    )
