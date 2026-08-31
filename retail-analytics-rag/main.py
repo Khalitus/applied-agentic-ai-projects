@@ -212,6 +212,30 @@ and ask grounded questions about company policies.
                 label="Average order value",
                 interactive=False
             )
+        with gr.Tab("Analytics"):
+
+            analysis_choice = gr.Dropdown(
+                choices=list(
+                    ANALYSIS_FUNCTIONS.keys()
+                ),
+                value="Region performance",
+                label="Business analysis"
+            )
+
+            analysis_button = gr.Button(
+                "Run analysis"
+            )
+
+            analysis_output = gr.Dataframe(
+                label="Results",
+                interactive=False
+            )
+
+            analysis_button.click(
+                fn=run_analysis,
+                inputs=analysis_choice,
+                outputs=analysis_output
+            )
 # MAIN PROGRAM
 
 def main():
