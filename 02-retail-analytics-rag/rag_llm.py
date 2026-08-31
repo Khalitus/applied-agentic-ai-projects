@@ -285,3 +285,23 @@ def ask_policy(question):
         "answer": answer,
         "sources": sources
     }
+
+def format_policy_result(result):
+    """Format a policy answer and its sources for display."""
+
+    answer = result["answer"]
+    sources = result["sources"]
+
+    if not sources:
+        return answer
+
+    source_lines = [
+        f"- {source['source']} (chunk {source['chunk_id']})"
+        for source in sources
+    ]
+
+    return (
+        f"{answer}\n\n"
+        "Sources:\n"
+        + "\n".join(source_lines)
+    )
