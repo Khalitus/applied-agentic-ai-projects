@@ -40,7 +40,9 @@ from rag_llm import (
     load_policy,
     split_policy,
     add_chunk_metadata,
-    inspect_chunks
+    inspect_chunks,
+    create_embeddings,
+    inspect_embedding
 )
 
 
@@ -150,6 +152,12 @@ def main():
         chunks
     )
 
+    embeddings = create_embeddings()
+
+    inspect_embedding(
+        embeddings,
+        "Who approves a 12 percent discount?"
+    )
 # RUN PROGRAM
 
 if __name__ == "__main__":
