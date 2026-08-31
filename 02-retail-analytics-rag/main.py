@@ -265,6 +265,40 @@ and ask grounded questions about company policies.
                 inputs=chart_choice,
                 outputs=chart_output
             )
+        with gr.Tab("Policy assistant"):
+
+            gr.Markdown(
+                """
+Ask questions about returns, shipping,
+discount approvals, and customer service policies.
+"""
+            )
+
+            policy_question = gr.Textbox(
+                label="Policy question",
+                placeholder=(
+                    "Who approves a 12% discount?"
+                ),
+                lines=2
+            )
+
+            policy_button = gr.Button(
+                "Ask policy assistant"
+            )
+
+            policy_answer = gr.Markdown()
+
+            policy_button.click(
+                fn=answer_policy_question,
+                inputs=policy_question,
+                outputs=policy_answer
+            )
+
+            policy_question.submit(
+                fn=answer_policy_question,
+                inputs=policy_question,
+                outputs=policy_answer
+            )
 # MAIN PROGRAM
 
 def main():
