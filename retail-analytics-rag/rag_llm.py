@@ -119,3 +119,14 @@ def load_vector_store():
         embedding_function=embeddings,
         persist_directory=str(VECTOR_DB_PATH)
     )
+
+def create_retriever(vector_store, k=3):
+    """Create a semantic retriever."""
+    return vector_store.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": k}
+    )
+
+def retrieve_policy_context(retriever, question):
+    """Retrieve policy chunks relevant to a question."""
+    return retriever.invoke(question)
