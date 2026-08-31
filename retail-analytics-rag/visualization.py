@@ -161,6 +161,42 @@ def plot_rating_distribution(orders):
     return fig
 
 
-def plot_region_category_heatmap(df):
-    # heatmap
-    pass
+def plot_region_category_heatmap(orders, products):
+    """Plot net sales by region and product category."""
+
+    data = orders.merge(
+        products[
+            ["product_id", "category"]
+        ],
+        on="product_id",
+        how="inner"
+    )
+
+    data["net_sales"] = (
+        data["quantity"]
+        * data["unit_price"]
+        * (1 - data["discount_pct"])
+    )
+
+    matrix = data.pivot_table(
+        index="region",
+        columns="category",
+        values="net_sales",
+        aggfunc="sum"
+    )
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    sns.heatmap(
+        matrix,
+        annot=True,
+        fmt=".0f",
+        ax=ax
+    )
+
+    ax.set_title("Net sales by region and category")
+    ax.set_xlabel("Category")
+    ax.set_ylabel("Region")
+
+    fig.tight_layout()
+    return fig
