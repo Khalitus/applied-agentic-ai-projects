@@ -38,7 +38,9 @@ from visualization import (
 
 from rag_llm import (
     load_policy,
-    split_policy
+    split_policy,
+    add_chunk_metadata,
+    inspect_chunks
 )
 
 
@@ -140,19 +142,13 @@ def main():
         documents
     )
 
-    print(
-        "\nPolicy chunks created:",
-        len(chunks)
+    chunks = add_chunk_metadata(
+        chunks
     )
 
-    print(
-        "\nFirst chunk preview:"
+    inspect_chunks(
+        chunks
     )
-
-    print(
-        chunks[0].page_content[:300]
-    )
-
 
 # RUN PROGRAM
 
