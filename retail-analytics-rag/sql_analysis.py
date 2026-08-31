@@ -848,4 +848,45 @@ def supplier_summary():
     return run_query(query)
 
 def return_rate_by_category():
-    pass
+    """Calculate return rate for each product category."""
+
+    query = """
+    SELECT
+        p.category,
+
+        COUNT(*) AS total_orders,
+
+        SUM(
+            CASE
+                WHEN o.returned = 'Yes'
+                THEN 1
+                ELSE 0
+            END
+        ) AS returned_orders,
+
+        ROUND(
+            (
+                SUM(
+                    CASE
+                        WHEN o.returned = 'Yes'
+                        THEN 1
+                        ELSE 0
+                    END
+                )
+                * 100.0
+                / COUNT(*)
+            ),
+            2
+        ) AS return_rate_pct
+
+    FROM orders AS o
+
+    INNER JOIN products AS p
+        ON o.product_id = p.product_id
+
+    GROUP BY p.category
+
+    ORDER BY return_rate_pct DESC
+    """
+
+    return run_query(query)
