@@ -699,5 +699,76 @@ def product_profitability():
 
     return run_query(query)
 
+def category_profitability():
+    """Summarize profitability by product category."""
+
+    query = """
+    SELECT
+        p.category,
+
+        COUNT(*) AS total_orders,
+
+        SUM(o.quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                o.quantity 
+                * o.unit_price
+                * (1-o.discount_pct)
+            ),
+        2
+        ) AS total_sales,
+
+        ROUND(
+            SUM(
+                o.quantity 
+                * p.unit_cost
+            ),
+            2
+        ) AS total_cost,
+
+        ROUND(
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1-o.discount_pct)
+                -
+                o.quantity
+                * p.unit_cost
+            ),
+            2
+        ) AS total_profit,
+
+        ROUND(
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1-o.discount_pct)
+                -
+                o.quantity
+                * p.unit_cost
+            )
+            /
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1-o.discount_pct)
+            )
+            * 100,
+            2
+        ) AS profit_margin_pct
+
+    FROM orders AS o
+
+    INNER JOIN products AS p
+        ON o.product_id = p.product_id
+
+    GROUP BY p.category
+
+    ORDER BY total_profit DESC
+    """
+
+    return run_query(query)
+
 def return_rate_by_category():
     pass

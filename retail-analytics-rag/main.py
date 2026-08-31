@@ -18,7 +18,9 @@ from sql_analysis import (
     slow_regions,
     city_order_summary,
     joined_order_sample,
-    product_profitability
+    product_profitability,
+    category_profitability,
+    supplier_summary
 )
 
 from visualization import (
