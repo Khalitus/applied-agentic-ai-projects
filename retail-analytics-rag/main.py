@@ -29,6 +29,7 @@ from visualization import (
     plot_sales_by_region,
     plot_monthly_sales,
     plot_category_profitability,
+    plot_discount_vs_order_value,
     save_chart
 )
 
@@ -120,20 +121,13 @@ def main():
         chart_path
     )
 
-    category_data = category_profitability()
-
-    category_figure = plot_category_profitability(
-        category_data
+    discount_figure = plot_discount_vs_order_value(
+    orders
     )
 
-    category_chart_path = save_chart(
-        category_figure,
-        "category_profitability.png"
-    )
-
-    print(
-        "\nCategory profitability chart saved:",
-        category_chart_path
+    save_chart(
+        discount_figure,
+        "discount_vs_order_value.png"
     )
 
 

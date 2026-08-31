@@ -105,9 +105,35 @@ def plot_category_profitability(df):
 
     return fig
 
-def plot_discount_vs_order_value(df):
-    # scatter plot
-    pass
+def plot_discount_vs_order_value(orders):
+    """Plot the relationship between discount and order value."""
+
+    data = orders.copy()
+
+    data["order_value"] = (
+        data["quantity"]
+        * data["unit_price"]
+        * (1 - data["discount_pct"])
+    )
+
+    data["discount_percent"] = data["discount_pct"] * 100
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+
+    sns.scatterplot(
+        data=data,
+        x="discount_percent",
+        y="order_value",
+        alpha=0.6,
+        ax=ax
+    )
+
+    ax.set_title("Discount vs order value")
+    ax.set_xlabel("Discount (%)")
+    ax.set_ylabel("Order value")
+
+    fig.tight_layout()
+    return fig
 
 
 def plot_rating_distribution(df):
