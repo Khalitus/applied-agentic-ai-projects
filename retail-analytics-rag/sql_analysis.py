@@ -619,7 +619,42 @@ def joined_order_sample():
     return run_query(query)
 
 def monthly_sales():
-    pass
+    """Summarize sales performance by month."""
+
+    query = """
+    SELECT
+        SUBSTR(order_date, 1, 7) AS month,
+
+        COUNT(*) AS total_orders,
+
+        SUM(quantity) AS units_sold,
+
+        ROUND(
+            SUM(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS total_sales,
+
+        ROUND(
+            AVG(
+                quantity
+                * unit_price
+                * (1 - discount_pct)
+            ),
+            2
+        ) AS average_order_value
+
+    FROM orders
+
+    GROUP BY month
+
+    ORDER BY month
+    """
+
+    return run_query(query)
 
 def product_profitability():
     """Summarize sales and profit for each product."""
