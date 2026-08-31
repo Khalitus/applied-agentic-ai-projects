@@ -40,11 +40,12 @@ from rag_llm import (
     load_policy,
     split_policy,
     add_chunk_metadata,
-    inspect_chunks,
     create_embeddings,
-    inspect_embedding,
     create_vector_store,
-    inspect_vector_store
+    load_vector_store,
+    create_retriever,
+    retrieve_policy_context,
+    inspect_retrieval
 )
 
 
@@ -146,21 +147,24 @@ def main():
 
     chunks = add_chunk_metadata(chunks)
 
-    inspect_chunks(chunks)
+    vector_store = load_vector_store()
 
-    embeddings = create_embeddings()
+    retriever = create_retriever(
+        vector_store,
+        k=3
+    )
 
-    inspect_embedding(
-        embeddings,
+    question = (
         "Who approves a 12 percent discount?"
     )
 
-    vector_store = create_vector_store(
-        chunks
+    documents = retrieve_policy_context(
+        retriever,
+        question
     )
 
-    inspect_vector_store(
-        vector_store
+    inspect_retrieval(
+        documents
     )
 # RUN PROGRAM
 
