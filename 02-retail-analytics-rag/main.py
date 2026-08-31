@@ -16,7 +16,8 @@ from sql_analysis import (
     channel_performance,
     large_customer_segments,
     slow_regions,
-    city_order_summary
+    city_order_summary,
+    joined_order_sample
 )
 
 from visualization import (
