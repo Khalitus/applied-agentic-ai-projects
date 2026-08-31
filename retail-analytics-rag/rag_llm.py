@@ -2,11 +2,19 @@ from pathlib import Path
 
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import CharacterTextSplitter
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 BASE_DIR = Path(__file__).resolve().parent
 POLICY_PATH = BASE_DIR / "data" / "company_policies.txt"
+VECTOR_DB_PATH = BASE_DIR / "data" / "chroma_db"
 
+EMBEDDING_MODEL = (
+    "sentence-transformers/all-MiniLM-L6-v2"
+)
+
+COLLECTION_NAME = "company_policies"
 
 def load_policy():
     """Load the company policy document."""
@@ -51,3 +59,9 @@ def add_chunk_metadata(chunks):
         chunk.metadata["source_name"] = POLICY_PATH.name
 
     return chunks
+
+def create_embeddings():
+    """Create the embedding model."""
+    return HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL
+    )
