@@ -65,3 +65,14 @@ def create_embeddings():
     return HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL
     )
+
+def inspect_embedding(embeddings, text):
+    """Display basic information about one embedding."""
+    vector = embeddings.embed_query(text)
+
+    print("\n=== Embedding inspection ===")
+    print("Text:", text)
+    print("Dimensions:", len(vector))
+    print("First 5 values:", vector[:5])
+
+    return vector
