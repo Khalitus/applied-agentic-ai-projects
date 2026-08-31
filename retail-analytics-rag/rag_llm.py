@@ -190,7 +190,7 @@ If the answer is not contained in the context, say:
 "I don't know based on the available company policies."
 
 Do not invent policies, requirements, approval rules, or timelines.
-
+When a policy contains a specific number, percentage, approval level, or time period, preserve that value in the answer.
 Keep the answer clear and concise.
 
 Context:
@@ -201,3 +201,35 @@ Question:
 
 Answer:
 """.strip()
+
+def ask_policy(question):
+    """Answer a question using retrieved company policy context."""
+
+    vector_store = load_vector_store()
+
+    retriever = create_retriever(
+        vector_store,
+        k=3
+    )
+
+    documents = retrieve_policy_context(
+        retriever,
+        question
+    )
+
+    context = format_context(
+        documents
+    )
+
+    prompt = build_prompt(
+        context,
+        question
+    )
+
+    llm = create_llm()
+
+    response = llm.invoke(
+        prompt
+    )
+
+    return response.text
