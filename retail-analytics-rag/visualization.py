@@ -73,10 +73,37 @@ def plot_monthly_sales(df):
     ax.set_xlabel("Month")
     ax.set_ylabel("Net sales")
     ax.tick_params(axis="x", rotation=45)
-
+    
     fig.tight_layout()
     return fig
 
+def plot_category_profitability(df):
+    """Plot total profit by product category."""
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+
+    sns.barplot(
+        data=df,
+        x="category",
+        y="total_profit",
+        ax=ax
+    )
+
+    ax.set_title(
+        "Profit by product category"
+    )
+
+    ax.set_xlabel(
+        "Category"
+    )
+
+    ax.set_ylabel(
+        "Total profit"
+    )
+
+    fig.tight_layout()
+
+    return fig
 
 def plot_discount_vs_order_value(df):
     # scatter plot
