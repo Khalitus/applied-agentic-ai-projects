@@ -32,6 +32,7 @@ from visualization import (
     plot_discount_vs_order_value,
     plot_rating_distribution,
     plot_region_category_heatmap,
+    plot_return_rate_by_category,
     save_chart
 )
 
@@ -123,16 +124,14 @@ def main():
         chart_path
     )
 
-    heatmap_figure = plot_region_category_heatmap(
-        orders,
-        products
-    )
+    return_data = return_rate_by_category()
+
+    return_figure = plot_return_rate_by_category(return_data)
 
     save_chart(
-        heatmap_figure,
-        "region_category_heatmap.png"
+        return_figure,
+        "return_rate_by_category.png"
     )
-
     # RAG PREPROCESSING
 
     documents = load_policy()
