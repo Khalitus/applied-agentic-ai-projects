@@ -31,6 +31,7 @@ from visualization import (
     plot_category_profitability,
     plot_discount_vs_order_value,
     plot_rating_distribution,
+    plot_region_category_heatmap,
     save_chart
 )
 
@@ -122,15 +123,15 @@ def main():
         chart_path
     )
 
-    rating_figure = plot_rating_distribution(
-        orders
+    heatmap_figure = plot_region_category_heatmap(
+        orders,
+        products
     )
 
     save_chart(
-        rating_figure,
-        "rating_distribution.png"
+        heatmap_figure,
+        "region_category_heatmap.png"
     )
-
 
     # RAG PREPROCESSING
 
