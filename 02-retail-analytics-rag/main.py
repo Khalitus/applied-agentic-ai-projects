@@ -41,6 +41,7 @@ from rag_llm import (
     format_policy_result
 )
 
+
 def initialize_project():
     """Prepare the datasets, database and RAG index."""
 
@@ -166,6 +167,51 @@ def answer_policy_question(question):
             "The policy assistant is "
             "temporarily unavailable."
         )
+
+def build_app():
+    """Build the Gradio interface."""
+
+    kpis = get_overall_kpis().iloc[0]
+
+    with gr.Blocks(
+        title="Retail analytics + RAG assistant"
+    ) as app:
+
+        gr.Markdown(
+            """
+# Retail analytics + RAG assistant
+
+Explore retail performance, visualize business trends,
+and ask grounded questions about company policies.
+"""
+        )
+
+        with gr.Row():
+            gr.Number(
+                value=int(kpis["total_orders"]),
+                label="Total orders",
+                interactive=False
+            )
+
+            gr.Number(
+                value=int(kpis["units_sold"]),
+                label="Units sold",
+                interactive=False
+            )
+
+            gr.Number(
+                value=float(kpis["total_sales"]),
+                label="Net sales",
+                interactive=False
+            )
+
+            gr.Number(
+                value=float(
+                    kpis["average_order_value"]
+                ),
+                label="Average order value",
+                interactive=False
+            )
 # MAIN PROGRAM
 
 def main():
