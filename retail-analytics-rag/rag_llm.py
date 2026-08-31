@@ -160,3 +160,21 @@ def format_context(documents):
         document.page_content
         for document in documents
     )
+
+def create_llm():
+    """Create the Gemini chat model."""
+    load_dotenv(ENV_PATH)
+
+    if not os.getenv("GOOGLE_API_KEY"):
+        raise ValueError(
+            "GOOGLE_API_KEY is missing from .env.local"
+        )
+
+    model_name = os.getenv(
+        "GEMINI_MODEL",
+        "gemini-3.5-flash"
+    )
+
+    return ChatGoogleGenerativeAI(
+        model=model_name
+    )
