@@ -105,6 +105,46 @@ def run_analysis(analysis_name):
     return ANALYSIS_FUNCTIONS[
         analysis_name
     ]()
+
+def generate_chart(chart_name):
+    """Generate the selected visualization."""
+
+    if chart_name == "Sales by region":
+        return plot_sales_by_region(
+            sales_by_region()
+        )
+
+    if chart_name == "Monthly sales":
+        return plot_monthly_sales(
+            monthly_sales()
+        )
+
+    if chart_name == "Category profitability":
+        return plot_category_profitability(
+            category_profitability()
+        )
+
+    if chart_name == "Discount vs order value":
+        return plot_discount_vs_order_value(
+            orders
+        )
+
+    if chart_name == "Rating distribution":
+        return plot_rating_distribution(
+            orders
+        )
+
+    if chart_name == "Region-category heatmap":
+        return plot_region_category_heatmap(
+            orders,
+            products
+        )
+
+    if chart_name == "Return rate by category":
+        return plot_return_rate_by_category(
+            return_rate_by_category()
+        )
+
 # MAIN PROGRAM
 
 def main():
