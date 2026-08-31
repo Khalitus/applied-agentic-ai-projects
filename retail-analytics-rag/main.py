@@ -286,6 +286,24 @@ discount approvals, and customer service policies.
                 "Ask policy assistant"
             )
 
+            gr.Examples(
+                examples=[
+                    [
+                        "Who approves a 12 percent discount?"
+                    ],
+                    [
+                        "How long does delivery take in the West region?"
+                    ],
+                    [
+                        "Can an opened non-defective product be returned?"
+                    ],
+                    [
+                        "What happens when a customer gives a rating of 2?"
+                    ]
+                ],
+                inputs=policy_question
+            )
+
             policy_answer = gr.Markdown()
 
             policy_button.click(
