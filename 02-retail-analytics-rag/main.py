@@ -30,6 +30,7 @@ from visualization import (
     plot_monthly_sales,
     plot_category_profitability,
     plot_discount_vs_order_value,
+    plot_rating_distribution,
     save_chart
 )
 
@@ -121,13 +122,13 @@ def main():
         chart_path
     )
 
-    discount_figure = plot_discount_vs_order_value(
-    orders
+    rating_figure = plot_rating_distribution(
+        orders
     )
 
     save_chart(
-        discount_figure,
-        "discount_vs_order_value.png"
+        rating_figure,
+        "rating_distribution.png"
     )
 
 
