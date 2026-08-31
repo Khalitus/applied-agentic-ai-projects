@@ -42,7 +42,9 @@ from rag_llm import (
     add_chunk_metadata,
     inspect_chunks,
     create_embeddings,
-    inspect_embedding
+    inspect_embedding,
+    create_vector_store,
+    inspect_vector_store
 )
 
 
@@ -140,23 +142,25 @@ def main():
 
     documents = load_policy()
 
-    chunks = split_policy(
-        documents
-    )
+    chunks = split_policy(documents)
 
-    chunks = add_chunk_metadata(
-        chunks
-    )
+    chunks = add_chunk_metadata(chunks)
 
-    inspect_chunks(
-        chunks
-    )
+    inspect_chunks(chunks)
 
     embeddings = create_embeddings()
 
     inspect_embedding(
         embeddings,
         "Who approves a 12 percent discount?"
+    )
+
+    vector_store = create_vector_store(
+        chunks
+    )
+
+    inspect_vector_store(
+        vector_store
     )
 # RUN PROGRAM
 

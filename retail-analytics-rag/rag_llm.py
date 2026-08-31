@@ -99,3 +99,13 @@ def create_vector_store(chunks):
     )
 
     return vector_store
+
+def inspect_vector_store(vector_store):
+    """Display basic vector store information."""
+    stored = vector_store.get()
+
+    print("\n=== Vector store ===")
+    print("Stored chunks:", len(stored["ids"]))
+    print("IDs:", stored["ids"])
+
+    return stored
