@@ -650,6 +650,7 @@ def product_profitability():
             ),
             2
         ) AS total_cost,
+        
 
         ROUND(
             SUM(
@@ -661,7 +662,27 @@ def product_profitability():
                 * p.unit_cost
             ),
             2
-        ) AS total_profit
+        ) AS total_profit,
+
+        ROUND(
+        (
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1-discount_pct)
+                -
+                o.quantity
+                * p.unit_cost
+            )
+            /
+            SUM(
+                o.quantity
+                * o.unit_price
+                * (1 - o.discount_pct)
+            )
+        ) * 100,
+        2
+        ) AS profit_margin_pct
 
     FROM orders AS o
 
