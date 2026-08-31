@@ -84,6 +84,27 @@ def initialize_project():
         )
 
     return orders, products
+
+ANALYSIS_FUNCTIONS = {
+    "Region performance": region_performance,
+    "Channel performance": channel_performance,
+    "Monthly sales": monthly_sales,
+    "Product profitability": product_profitability,
+    "Category profitability": category_profitability,
+    "Supplier summary": supplier_summary,
+    "Return rate by category": return_rate_by_category,
+    "City order summary": city_order_summary,
+    "Recent orders": recent_orders,
+    "Largest orders": largest_orders,
+    "High discount orders": high_discount_orders,
+    "Low rated orders": low_rated_orders
+}
+
+def run_analysis(analysis_name):
+    """Run the selected business analysis."""
+    return ANALYSIS_FUNCTIONS[
+        analysis_name
+    ]()
 # MAIN PROGRAM
 
 def main():
