@@ -27,6 +27,7 @@ from sql_analysis import (
 
 from visualization import (
     plot_sales_by_region,
+    plot_monthly_sales,
     save_chart
 )
 
@@ -116,6 +117,22 @@ def main():
     print(
         "\nChart saved:",
         chart_path
+    )
+
+    monthly_data = monthly_sales()
+
+    monthly_figure = plot_monthly_sales(
+        monthly_data
+    )
+
+    monthly_chart_path = save_chart(
+        monthly_figure,
+        "monthly_sales.png"
+    )
+
+    print(
+        "\nMonthly sales chart saved:",
+        monthly_chart_path
     )
 
 
