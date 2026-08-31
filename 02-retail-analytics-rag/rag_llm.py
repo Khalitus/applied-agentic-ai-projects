@@ -31,3 +31,14 @@ def split_policy(
     )
 
     return splitter.split_documents(documents)
+
+def inspect_chunks(chunks, preview_chars=250):
+    """Display chunk information for debugging."""
+
+    print("\n=== Chunk inspection ===")
+    print("Total chunks:", len(chunks))
+
+    for index, chunk in enumerate(chunks, start=1):
+        print(f"\nChunk {index}")
+        print("Characters:", len(chunk.page_content))
+        print(chunk.page_content[:preview_chars])
