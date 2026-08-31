@@ -178,3 +178,26 @@ def create_llm():
     return ChatGoogleGenerativeAI(
         model=model_name
     )
+
+def build_prompt(context, question):
+    """Build a grounded policy question-answering prompt."""
+    return f"""
+You are a company policy assistant.
+
+Answer the question using only the provided policy context.
+
+If the answer is not contained in the context, say:
+"I don't know based on the available company policies."
+
+Do not invent policies, requirements, approval rules, or timelines.
+
+Keep the answer clear and concise.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+""".strip()
