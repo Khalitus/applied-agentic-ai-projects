@@ -200,3 +200,21 @@ def plot_region_category_heatmap(orders, products):
 
     fig.tight_layout()
     return fig
+
+def plot_return_rate_by_category(df):
+    """Plots product categories by the highest return rate"""
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    sns.barplot(
+        data = df,
+        x = "category",
+        y = "return_rate_pct",
+        ax = ax
+    )
+
+    ax.set_title("Return Rate by Category")
+    ax.set_xlabel("Category")
+    ax.set_ylabel("Return Rate (%)")
+
+    fig.tight_layout()
+    return fig
