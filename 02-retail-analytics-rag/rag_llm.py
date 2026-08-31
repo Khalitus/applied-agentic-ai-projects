@@ -42,3 +42,12 @@ def inspect_chunks(chunks, preview_chars=250):
         print(f"\nChunk {index}")
         print("Characters:", len(chunk.page_content))
         print(chunk.page_content[:preview_chars])
+
+def add_chunk_metadata(chunks):
+    """Attach useful metadata to each chunk."""
+
+    for index, chunk in enumerate(chunks, start=1):
+        chunk.metadata["chunk_id"] = index
+        chunk.metadata["source_name"] = POLICY_PATH.name
+
+    return chunks
