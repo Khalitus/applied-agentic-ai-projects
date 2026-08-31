@@ -37,7 +37,8 @@ from visualization import (
 )
 
 from rag_llm import (
-    ask_policy
+    ask_policy,
+    format_policy_result
 )
 
 
@@ -135,7 +136,7 @@ def main():
 
     question = "Who approves a 12 percent discount?"
 
-    answer = ask_policy(
+    result = ask_policy(
         question
     )
 
@@ -143,8 +144,10 @@ def main():
     print(question)
 
     print("\nAnswer:")
-    print(answer)
-    
+    print(
+        format_policy_result(result)
+    )
+
 # RUN PROGRAM
 
 if __name__ == "__main__":
