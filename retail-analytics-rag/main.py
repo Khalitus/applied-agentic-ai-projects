@@ -236,6 +236,35 @@ and ask grounded questions about company policies.
                 inputs=analysis_choice,
                 outputs=analysis_output
             )
+        with gr.Tab("Visualizations"):
+
+            chart_choice = gr.Dropdown(
+                choices=[
+                    "Sales by region",
+                    "Monthly sales",
+                    "Category profitability",
+                    "Discount vs order value",
+                    "Rating distribution",
+                    "Region-category heatmap",
+                    "Return rate by category"
+                ],
+                value="Sales by region",
+                label="Visualization"
+            )
+
+            chart_button = gr.Button(
+                "Generate chart"
+            )
+
+            chart_output = gr.Plot(
+                label="Chart"
+            )
+
+            chart_button.click(
+                fn=generate_chart,
+                inputs=chart_choice,
+                outputs=chart_output
+            )
 # MAIN PROGRAM
 
 def main():
