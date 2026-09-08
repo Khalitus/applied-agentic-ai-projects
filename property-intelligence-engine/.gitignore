@@ -1,0 +1,76 @@
+# Block all environment files by default
+.env
+.env.local
+.env.dev
+.env.development
+.env.test
+.env.prod
+.env.production
+*.env.local
+
+# Block personal/local configuration overrides
+*.local
+*.local.*
+config/local.json
+config/local.yaml
+config/local.yml
+
+# SQLite
+*.db
+*.db-journal
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
+
+# MySQL / PostgreSQL dumps and backups
+*.sql
+*.sql.gz
+*.sql.tgz
+*.backup
+*.dump
+
+# Local database data directories
+data/
+db_data/
+postgres_data/
+mysql_data/
+.redis/
+
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# Build directories
+dist/
+build/
+out/
+.next/
+.nuxt/
+target/
+
+# Logs and runtimes
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
