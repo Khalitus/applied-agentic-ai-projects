@@ -102,3 +102,23 @@ def get_recent_sales(limit=10):
         query,
         params=(limit,),
     )
+
+def get_neighborhood_summary():
+    query = """
+        SELECT
+            n.neighborhood_id,
+            COUNT(p.property_id) AS property_count,
+            AVG(p.area_sqm) AS avg_area_sqm,
+            AVG(p.bedrooms) AS avg_bedrooms
+
+        FROM neighborhoods AS n
+
+        LEFT JOIN properties AS p
+            ON n.neighborhood_id = p.neighborhood_id
+
+        GROUP BY n.neighborhood_id
+
+        ORDER BY property_count DESC
+    """
+
+    return run_query(query)
