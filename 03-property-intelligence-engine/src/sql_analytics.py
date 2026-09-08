@@ -72,3 +72,33 @@ def get_filtered_properties(
             limit,
         ),
     )
+
+def get_recent_sales(limit=10):
+    query = """
+        SELECT
+            s.sale_id,
+            s.sale_date,
+            s.sale_price,
+            p.property_id,
+            p.property_type,
+            p.bedrooms,
+            p.area_sqm,
+            n.neighborhood_name
+
+        FROM sales AS s
+
+        INNER JOIN properties AS p
+            ON s.property_id = p.property_id
+
+        INNER JOIN neighborhoods AS n
+            ON p.neighborhood_id = n.neighborhood_id
+
+        ORDER BY s.sale_date DESC
+
+        LIMIT ?
+    """
+
+    return run_query(
+        query,
+        params=(limit,),
+    )
