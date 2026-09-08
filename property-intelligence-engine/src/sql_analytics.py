@@ -10,3 +10,26 @@ def run_query(query, params=()):
             conn,
             params=params,
         )
+    
+def get_property_catalog(limit=10):
+    query = """
+        SELECT
+            p.property_id,
+            p.property_type,
+            p.bedrooms,
+            p.bathrooms,
+            p.area_sqm,
+            p.year_built,
+            n.neighborhood_name,
+            p.parking_spaces
+        FROM properties AS p
+        INNER JOIN neighborhoods AS n
+            ON p.neighborhood_id = n.neighborhood_id
+        ORDER BY p.area_sqm DESC
+        LIMIT ?
+    """
+
+    return run_query(
+        query,
+        params=(limit,),
+    )
