@@ -33,3 +33,42 @@ def get_property_catalog(limit=10):
         query,
         params=(limit,),
     )
+
+def get_filtered_properties(
+    property_type,
+    min_bedrooms=1,
+    limit=10,
+):
+    query = """
+        SELECT
+            p.property_id,
+            p.property_type,
+            p.bedrooms,
+            p.bathrooms,
+            p.area_sqm,
+            p.parking_spaces,
+            n.neighborhood_name,
+            n.distance_to_center_km
+
+        FROM properties AS p
+
+        INNER JOIN neighborhoods AS n
+            ON p.neighborhood_id = n.neighborhood_id
+
+        WHERE
+            p.property_type = ?
+            AND p.bedrooms >= ?
+
+        ORDER BY p.area_sqm DESC
+
+        LIMIT ?
+    """
+
+    return run_query(
+        query,
+        params=(
+            property_type,
+            min_bedrooms,
+            limit,
+        ),
+    )
