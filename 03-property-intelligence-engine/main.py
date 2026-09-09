@@ -5,6 +5,7 @@ from src.sql_analytics import (
     get_recent_sales,
     get_neighborhood_summary,
     get_latest_property_sales,
+    get_neighborhood_price_analytics
 )
 
 def main():
@@ -14,9 +15,9 @@ def main():
     show_database_summary()
 
     print("\nPROPERTY CATALOG")
-    ranked_sales = get_latest_property_sales(limit=20)
+    analytics = get_neighborhood_price_analytics(limit=20)
 
-    print(ranked_sales.to_string(index=False))
+    print(analytics.to_string(index=False))
 
 if __name__ == "__main__":
     main()

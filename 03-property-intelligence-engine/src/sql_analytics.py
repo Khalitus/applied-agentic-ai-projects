@@ -166,3 +166,75 @@ def get_latest_property_sales(limit=20):
         query,
         params=(limit,),
     )
+
+def get_neighborhood_price_analytics(limit=20):
+    query = """
+        WITH ranked_sales AS (
+            SELECT
+                s.property_id,
+                s.sale_date,
+                s.sale_price,
+
+                ROW_NUMBER() OVER (
+                    PARTITION BY s.property_id
+                    ORDER BY s.sale_date DESC
+                ) AS sale_rank
+
+            FROM sales AS s
+        ),
+
+        latest_sales AS (
+            SELECT
+                property_id,
+                sale_date,
+                sale_price
+            FROM ranked_sales
+            WHERE sale_rank = 1
+        )
+
+        SELECT
+            p.property_id,
+            p.property_type,
+            n.neighborhood_name,
+            ls.sale_price,
+             
+            RANK() OVER (
+                PARTITION BY n.neighborhood_name
+                ORDER BY ls.sale_price DESC
+            ) AS price_rank,           
+
+            ROUND(
+                AVG(ls.sale_price)
+                OVER (
+                    PARTITION BY n.neighborhood_name
+                ),
+                2
+            ) AS neighborhood_avg_price,
+
+            ROUND(
+                ls.sale_price - AVG(ls.sale_price)
+                OVER(
+                    PARTITION BY n.neighborhood_name
+                ),
+                2
+            ) AS price_difference_from_avg
+            
+        FROM properties AS p
+
+        INNER JOIN neighborhoods AS n
+            ON p.neighborhood_id = n.neighborhood_id
+
+        INNER JOIN latest_sales AS ls
+            ON p.property_id = ls.property_id
+
+        ORDER BY
+            n.neighborhood_name,
+            ls.sale_price DESC
+
+        LIMIT ?
+    """
+
+    return run_query(
+        query,
+        params=(limit,),
+    )
