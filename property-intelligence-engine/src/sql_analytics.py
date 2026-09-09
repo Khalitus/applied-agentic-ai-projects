@@ -125,23 +125,29 @@ def get_neighborhood_summary():
 
 def get_latest_property_sales(limit=20):
     query = """
+        WITH ranked_sales AS (
+            SELECT
+                s.sale_id,
+                s.property_id,
+                s.sale_date,
+                s.sale_price,
+
+                ROW_NUMBER() OVER (
+                    PARTITION BY s.property_id
+                    ORDER BY s.sale_date DESC
+                ) AS sale_rank
+
+            FROM sales AS s
+        )
+
         SELECT
-            s.sale_id,
-            s.property_id,
-            s.sale_date,
-            s.sale_price,
-
-            ROW_NUMBER() OVER (
-                PARTITION BY s.property_id
-                ORDER BY s.sale_date DESC
-            ) AS sale_rank
-
-        FROM sales AS s
-
-        ORDER BY
-            s.property_id,
-            s.sale_date DESC
-
+            sale_id,
+            property_id,
+            sale_date,
+            sale_price
+        FROM ranked_sales
+        WHERE sale_rank = 1
+        ORDER BY sale_date DESC
         LIMIT ?
     """
 
