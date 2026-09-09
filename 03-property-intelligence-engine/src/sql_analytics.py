@@ -141,11 +141,22 @@ def get_latest_property_sales(limit=20):
         )
 
         SELECT
-            sale_id,
-            property_id,
-            sale_date,
-            sale_price
-        FROM ranked_sales
+            p.property_id,
+            p.property_type,
+            p.bedrooms,
+            p.area_sqm,
+            n.neighborhood_name,
+            rs.sale_date,
+            rs.sale_price
+
+        FROM ranked_sales AS rs
+
+        INNER JOIN properties as p
+            ON rs.property_id = p.property_id
+
+        INNER JOIN neighborhoods as n
+            ON p.neighborhood_id = n.neighborhood_id
+
         WHERE sale_rank = 1
         ORDER BY sale_date DESC
         LIMIT ?
