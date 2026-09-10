@@ -15,10 +15,5 @@ def main():
     setup_database()
     show_database_summary()
 
-    print("\nPROPERTY CATALOG")
-    history = get_sale_history_growth(limit=30)
-
-    print(history.to_string(index=False))
-
 if __name__ == "__main__":
     main()
