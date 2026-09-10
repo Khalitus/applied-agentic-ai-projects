@@ -238,3 +238,42 @@ def get_neighborhood_price_analytics(limit=20):
         query,
         params=(limit,),
     )
+
+def get_sale_history_growth(limit=30):
+    query = """
+        SELECT
+            s.sale_id,
+            s.property_id,
+            p.property_type,
+            n.neighborhood_name,
+            s.sale_date,
+            s.sale_price,
+
+            LAG(s.sale_price) OVER (
+                PARTITION BY s.property_id
+                ORDER BY s.sale_date
+            ) AS previous_sale_price,
+
+            s.sale_price - LAG(s.sale_price) OVER(PARTITION BY s.property_id ORDER BY s.sale_date) AS price_change,
+
+            ROUND(((s.sale_price - LAG(s.sale_price) OVER(PARTITION BY s.property_id ORDER BY s.sale_date)) / LAG(s.sale_price) OVER(PARTITION BY s.property_id ORDER BY s.sale_date)) * 100.0,2) AS price_change_pct
+
+        FROM sales AS s
+
+        INNER JOIN properties AS p
+            ON s.property_id = p.property_id
+
+        INNER JOIN neighborhoods as n
+            ON p.neighborhood_id = n.neighborhood_id
+
+        ORDER BY
+            s.property_id,
+            s.sale_date
+
+        LIMIT ?
+    """
+
+    return run_query(
+        query,
+        params=(limit,),
+    )
