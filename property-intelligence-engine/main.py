@@ -8,7 +8,10 @@ from src.sql_analytics import (
     get_neighborhood_price_analytics,
     get_sale_history_growth
 )
-from src.ml_model import load_modeling_dataset
+from src.ml_model import (
+    load_modeling_dataset,
+    prepare_features_target
+)
 
 def main():
     print("\nPROPERTY INTELLIGENCE ENGINE")
@@ -24,6 +27,25 @@ def main():
     print(data.head().to_string(index=False))
     print(f"\nRows: {len(data)}")
     print(f"Columns: {len(data.columns)}")
+
+    X, y = prepare_features_target(data)
+
+    print("\nFeatures")
+    print("-" * 32)
+    print(X.head().to_string(index=False))
+
+    print("\nTarget")
+    print("-" * 32)
+    print(y.head().to_string(index=False))
+
+    print(X.shape)
+    print(y.shape)
+
+    print(X.isna().sum())
+    print(y.isna().sum())
+
+    print(X.dtypes)
+  
 
 if __name__ == "__main__":
     main()
