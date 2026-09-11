@@ -45,3 +45,29 @@ def load_modeling_dataset():
     """
 
     return run_query(query)
+
+def prepare_features_target(data):
+    prepared = data.copy()
+
+    prepared["property_age"] = (
+        2026 - prepared["year_built"]
+    )
+
+    features = [
+        "bedrooms",
+        "bathrooms",
+        "area_sqm",
+        "property_age",
+        "parking_spaces",
+        "floor",
+        "furnished",
+        "distance_to_center_km",
+        "school_score",
+        "transit_score",
+        "safety_score",
+    ]
+
+    X = prepared[features]
+    y = prepared["sale_price"]
+
+    return X, y
