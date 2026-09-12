@@ -203,3 +203,11 @@ def train_random_forest(train_X, train_y):
 
     return model
 
+def better_model(tree_mae, forest_mae):
+    if tree_mae < forest_mae:
+        return "Decision Tree"
+    elif forest_mae <= tree_mae:
+        return "Random Forest"
+
+def forest_improvement(tree_mae, forest_mae):
+    return (tree_mae - forest_mae)/tree_mae * 100

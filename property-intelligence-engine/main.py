@@ -7,7 +7,6 @@ from src.sql_analytics import (
     get_latest_property_sales,
     get_neighborhood_price_analytics,
     get_sale_history_growth,
-    
 )
 from src.ml_model import (
     load_modeling_dataset,
@@ -20,6 +19,8 @@ from src.ml_model import (
     compare_tree_sizes,
     train_tuned_tree,
     train_random_forest,
+    better_model,
+    forest_improvement
 )
 
 def main():
@@ -130,5 +131,13 @@ def main():
     forest_mae = evaluate_model(forest_model, val_X, val_y)
 
     print(f"\nForest MAE: {forest_mae:,.2f}")
+
+    good_model = better_model(best_mae, forest_mae)
+
+    print(f"Better model: {good_model}")
+
+    improvement = forest_improvement(best_mae, forest_mae)
+    print(f"Random Forest improvement: {improvement:,.2f}%")
+
 if __name__ == "__main__":
     main()
