@@ -1,5 +1,6 @@
 from src.sql_analytics import run_query
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
 
 def load_modeling_dataset():
     query = """
@@ -90,3 +91,10 @@ def make_sample_predictions(model, X, count=5):
     predictions = model.predict(sample)
 
     return sample, predictions
+
+def evaluate_training_error(model, X, y):
+    predictions = model.predict(X)
+
+    mae = mean_absolute_error(y, predictions)
+
+    return mae

@@ -12,7 +12,8 @@ from src.ml_model import (
     load_modeling_dataset,
     prepare_features_target,
     train_baseline_model,
-    make_sample_predictions
+    make_sample_predictions,
+    evaluate_training_error
 )
 
 def main():
@@ -63,6 +64,16 @@ def main():
     print("\nPredicted prices")
     print("-" * 32)
     print(predictions)
+
+    mae = evaluate_training_error(
+        model,
+        X,
+        y,
+    )
+
+    print("\nTraining MAE")
+    print("-" * 32)
+    print(f"{mae:,.2f}")
     
 
 if __name__ == "__main__":
