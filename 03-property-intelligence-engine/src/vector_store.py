@@ -4,6 +4,8 @@ from pathlib import Path
 import chromadb
 from chromadb.utils import embedding_functions
 
+import pandas as pd
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 CHROMA_PATH = BASE_DIR / "data" / "chroma_db"
 COLLECTION_NAME = "properties"
@@ -160,4 +162,32 @@ def semantic_search(query, n_results=5):
         ],
     )
 
-    return results
+    return format_search_results(results)
+
+def format_search_results(results):
+    records = []
+
+    ids = results["ids"][0]
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
+    distances = results["distances"][0]
+
+    for property_id, document, metadata, distance in zip(
+        ids,
+        documents,
+        metadatas,
+        distances,
+    ):
+        record = {
+            "property_id": property_id,
+            "property_type": metadata["property_type"],
+            "neighborhood_name": metadata["neighborhood_name"],
+            "bedrooms": metadata["bedrooms"],
+            "sale_price": metadata["sale_price"],
+            "distance": distance,
+            "document": document,
+        }
+
+        records.append(record)
+
+    return pd.DataFrame(records)

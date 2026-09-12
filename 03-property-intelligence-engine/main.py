@@ -155,15 +155,7 @@ def main():
 
     print("\nSemantic search")
     print("-" * 32)
-    
-    for document, metadata, distance in zip(
-        results["documents"][0],
-        results["metadatas"][0],
-        results["distances"][0],
-    ):
-        print(f"\nDistance: {distance:.4f}")
-        print(metadata)
-        print(document)
+    print(results.to_string(index=False))
 
 if __name__ == "__main__":
     main()
