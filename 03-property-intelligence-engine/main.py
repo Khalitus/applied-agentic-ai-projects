@@ -20,76 +20,107 @@ from src.ml_model import (
     forest_improvement,
 )
 
+from src.vector_store import (
+    load_property_search_data,
+    build_property_document,
+    prepare_property_documents
+)
+
 def main():
     print("\nPROPERTY INTELLIGENCE ENGINE")
     print("-" * 32)
     setup_database()
     show_database_summary()
 
-    print("\nModeling dataset")
+    # print("\nModeling dataset")
+    # print("-" * 32)
+
+    # data = load_modeling_dataset()
+
+    # print(data.head().to_string(index=False))
+    # print(f"\nRows: {len(data)}")
+    # print(f"Columns: {len(data.columns)}")
+
+    # X, y = prepare_features_target(data)
+
+    # print("\nFeatures")
+    # print("-" * 32)
+    # print(X.head().to_string(index=False))
+
+    # print("\nTarget")
+    # print("-" * 32)
+    # print(y.head().to_string(index=False))
+
+    # print(X.shape)
+    # print(y.shape)
+
+    # print(X.isna().sum())
+    # print(y.isna().sum())
+
+    # print(X.dtypes)
+
+    # train_X, val_X, train_y, val_y = split_modeling_data(X, y)
+
+    # results = compare_tree_sizes(
+    #     train_X,
+    #     val_X,
+    #     train_y,
+    #     val_y,
+    # )
+
+    # print("\nDecision tree tuning")
+    # print("-" * 32)
+
+    # for leaves, mae in results.items():
+    #     print(
+    #         f"Max leaf nodes: {leaves:<3} "
+    #         f"Validation MAE: {mae:,.2f}"
+    #     )
+
+    # best_leaf_nodes = min(results, key = results.get)
+
+    # best_model = train_tuned_tree(best_leaf_nodes, train_X, train_y)
+    # best_mae = evaluate_model(best_model, val_X, val_y)
+
+    # print(f"\nBest max leaf nodes: {best_leaf_nodes}")
+    # print(f"Best MAE: {best_mae:,.2f}")
+
+    # forest_model = train_random_forest(train_X, train_y)
+    # forest_mae = evaluate_model(forest_model, val_X, val_y)
+
+    # print(f"\nForest MAE: {forest_mae:,.2f}")
+
+    # good_model = better_model(best_mae, forest_mae)
+
+    # print(f"Better model: {good_model}")
+
+    # improvement = forest_improvement(best_mae, forest_mae)
+    # print(f"Random Forest improvement: {improvement:,.2f}%")
+
+    search_data = load_property_search_data()
+
+    print("\nProperty search data")
     print("-" * 32)
+    print(search_data.head().to_string(index=False))
+    print(f"\nRows: {len(search_data)}")
 
-    data = load_modeling_dataset()
+    row = search_data.iloc[0]
 
-    print(data.head().to_string(index=False))
-    print(f"\nRows: {len(data)}")
-    print(f"Columns: {len(data.columns)}")
+    document = build_property_document(row)
 
-    X, y = prepare_features_target(data)
-
-    print("\nFeatures")
-    print("-" * 32)
-    print(X.head().to_string(index=False))
-
-    print("\nTarget")
-    print("-" * 32)
-    print(y.head().to_string(index=False))
-
-    print(X.shape)
-    print(y.shape)
-
-    print(X.isna().sum())
-    print(y.isna().sum())
-
-    print(X.dtypes)
-
-    train_X, val_X, train_y, val_y = split_modeling_data(X, y)
-
-    results = compare_tree_sizes(
-        train_X,
-        val_X,
-        train_y,
-        val_y,
+    ids, documents, metadatas = prepare_property_documents(
+        search_data
     )
 
-    print("\nDecision tree tuning")
-    print("-" * 32)
+    print(len(ids))
+    print(len(documents))
+    print(len(metadatas))
 
-    for leaves, mae in results.items():
-        print(
-            f"Max leaf nodes: {leaves:<3} "
-            f"Validation MAE: {mae:,.2f}"
-        )
+    index = 0
 
-    best_leaf_nodes = min(results, key = results.get)
-
-    best_model = train_tuned_tree(best_leaf_nodes, train_X, train_y)
-    best_mae = evaluate_model(best_model, val_X, val_y)
-
-    print(f"\nBest max leaf nodes: {best_leaf_nodes}")
-    print(f"Best MAE: {best_mae:,.2f}")
-
-    forest_model = train_random_forest(train_X, train_y)
-    forest_mae = evaluate_model(forest_model, val_X, val_y)
-
-    print(f"\nForest MAE: {forest_mae:,.2f}")
-
-    good_model = better_model(best_mae, forest_mae)
-
-    print(f"Better model: {good_model}")
-
-    improvement = forest_improvement(best_mae, forest_mae)
-    print(f"Random Forest improvement: {improvement:,.2f}%")
+    print(ids[index])
+    print(documents[index])
+    print(metadatas[index])
 
 if __name__ == "__main__":
     main()
