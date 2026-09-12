@@ -17,7 +17,8 @@ from src.ml_model import (
     evaluate_training_error,
     split_modeling_data,
     evaluate_baseline_split,
-    compare_tree_sizes
+    compare_tree_sizes,
+    train_tuned_tree
 )
 
 def main():
@@ -118,7 +119,11 @@ def main():
 
     best_leaf_nodes = min(results, key = results.get)
 
-    
+    best_model = train_tuned_tree(best_leaf_nodes, train_X, train_y)
+    best_mae = evaluate_training_error(best_model, val_X, val_y)
+
+    print(f"\nBest max leaf nodes: {best_leaf_nodes}")
+    print(f"Best MAE: {best_mae:,.2f}")
 
 if __name__ == "__main__":
     main()
