@@ -23,7 +23,10 @@ from src.ml_model import (
 from src.vector_store import (
     load_property_search_data,
     build_property_document,
-    prepare_property_documents
+    prepare_property_documents,
+    get_property_collection,
+    build_property_index,
+    get_index_summary
 )
 
 def main():
@@ -97,30 +100,52 @@ def main():
     # improvement = forest_improvement(best_mae, forest_mae)
     # print(f"Random Forest improvement: {improvement:,.2f}%")
 
-    search_data = load_property_search_data()
+    # search_data = load_property_search_data()
 
-    print("\nProperty search data")
+    # print("\nProperty search data")
+    # print("-" * 32)
+    # print(search_data.head().to_string(index=False))
+    # print(f"\nRows: {len(search_data)}")
+
+    # row = search_data.iloc[0]
+
+    # document = build_property_document(row)
+
+    # ids, documents, metadatas = prepare_property_documents(
+    #     search_data
+    # )
+
+    # print(len(ids))
+    # print(len(documents))
+    # print(len(metadatas))
+
+    # index = 0
+
+    # print(ids[index])
+    # print(documents[index])
+    # print(metadatas[index])
+
+    # collection = get_property_collection()
+
+    # print("\nVector collection")
+    # print("-" * 32)
+    # print(f"Name: {collection.name}")
+    # print(f"Records: {collection.count()}")
+
+    # collection = build_property_index()
+    
+    # print("\nProperty vector index")
+    # print("-" * 32)
+    # print(f"Indexed properties: {collection.count()}")
+
+    count, sample = get_index_summary()
+
+    print("\nVector index summary")
     print("-" * 32)
-    print(search_data.head().to_string(index=False))
-    print(f"\nRows: {len(search_data)}")
-
-    row = search_data.iloc[0]
-
-    document = build_property_document(row)
-
-    ids, documents, metadatas = prepare_property_documents(
-        search_data
-    )
-
-    print(len(ids))
-    print(len(documents))
-    print(len(metadatas))
-
-    index = 0
-
-    print(ids[index])
-    print(documents[index])
-    print(metadatas[index])
+    print(f"Records: {count}")
+    print(f"ID: {sample['ids'][0]}")
+    print(f"Document: {sample['documents'][0]}")
+    print(f"Metadata: {sample['metadatas'][0]}")
 
 if __name__ == "__main__":
     main()
