@@ -15,7 +15,8 @@ from src.ml_model import (
     train_baseline_model,
     make_sample_predictions,
     evaluate_training_error,
-    split_modeling_data
+    split_modeling_data,
+    evaluate_baseline_split
 )
 
 def main():
@@ -79,12 +80,24 @@ def main():
 
     train_X, val_X, train_y, val_y = split_modeling_data(X, y)
 
-    print("\nTraining and validation split")
+    # print("\nTraining and validation split")
+    # print("-" * 32)
+    # print(f"Training features: {train_X.shape}")
+    # print(f"Validation features: {val_X.shape}")
+    # print(f"Training target: {train_y.shape}")
+    # print(f"Validation target: {val_y.shape}")
+
+    train_mae, val_mae = evaluate_baseline_split(
+        train_X,
+        val_X,
+        train_y,
+        val_y,
+    )
+
+    print("\nUnrestricted decision tree")
     print("-" * 32)
-    print(f"Training features: {train_X.shape}")
-    print(f"Validation features: {val_X.shape}")
-    print(f"Training target: {train_y.shape}")
-    print(f"Validation target: {val_y.shape}")
+    print(f"Training MAE: {train_mae:,.2f}")
+    print(f"Validation MAE: {val_mae:,.2f}")
     
 
 if __name__ == "__main__":
