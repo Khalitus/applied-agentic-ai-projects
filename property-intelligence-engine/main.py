@@ -16,7 +16,8 @@ from src.ml_model import (
     make_sample_predictions,
     evaluate_training_error,
     split_modeling_data,
-    evaluate_baseline_split
+    evaluate_baseline_split,
+    compare_tree_sizes
 )
 
 def main():
@@ -87,17 +88,36 @@ def main():
     # print(f"Training target: {train_y.shape}")
     # print(f"Validation target: {val_y.shape}")
 
-    train_mae, val_mae = evaluate_baseline_split(
+    # train_mae, val_mae = evaluate_baseline_split(
+    #     train_X,
+    #     val_X,
+    #     train_y,
+    #     val_y,
+    # )
+
+    # print("\nUnrestricted decision tree")
+    # print("-" * 32)
+    # print(f"Training MAE: {train_mae:,.2f}")
+    # print(f"Validation MAE: {val_mae:,.2f}")
+
+    results = compare_tree_sizes(
         train_X,
         val_X,
         train_y,
         val_y,
     )
 
-    print("\nUnrestricted decision tree")
+    print("\nDecision tree tuning")
     print("-" * 32)
-    print(f"Training MAE: {train_mae:,.2f}")
-    print(f"Validation MAE: {val_mae:,.2f}")
+
+    for leaves, mae in results.items():
+        print(
+            f"Max leaf nodes: {leaves:<3} "
+            f"Validation MAE: {mae:,.2f}"
+        )
+
+    best_leaf_nodes = min(results, key = results.get)
+
     
 
 if __name__ == "__main__":
