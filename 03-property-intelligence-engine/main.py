@@ -10,7 +10,8 @@ from src.sql_analytics import (
 )
 from src.ml_model import (
     load_modeling_dataset,
-    prepare_features_target
+    prepare_features_target,
+    train_baseline_model
 )
 
 def main():
@@ -45,6 +46,12 @@ def main():
     print(y.isna().sum())
 
     print(X.dtypes)
+
+    model, X, y = train_baseline_model()
+
+    print("\nBaseline model")
+    print("-" * 32)
+    print(model)
   
 
 if __name__ == "__main__":
