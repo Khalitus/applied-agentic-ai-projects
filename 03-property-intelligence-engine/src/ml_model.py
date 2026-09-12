@@ -83,3 +83,10 @@ def train_baseline_model():
     model.fit(X,y)
 
     return model, X, y
+
+def make_sample_predictions(model, X, count=5):
+    sample = X.head(count)
+
+    predictions = model.predict(sample)
+
+    return sample, predictions
