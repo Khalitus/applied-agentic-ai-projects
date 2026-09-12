@@ -109,3 +109,38 @@ def split_modeling_data(X, y):
     )
 
     return train_X, val_X, train_y, val_y
+
+def evaluate_baseline_split(
+    train_X,
+    val_X,
+    train_y,
+    val_y,
+):
+    model = DecisionTreeRegressor(
+        random_state=42
+    )
+
+    model.fit(
+        train_X,
+        train_y,
+    )
+
+    train_predictions = model.predict(
+        train_X
+    )
+
+    val_predictions = model.predict(
+        val_X
+    )
+
+    train_mae = mean_absolute_error(
+        train_y,
+        train_predictions,
+    )
+
+    val_mae = mean_absolute_error(
+        val_y,
+        val_predictions,
+    )
+
+    return train_mae, val_mae
