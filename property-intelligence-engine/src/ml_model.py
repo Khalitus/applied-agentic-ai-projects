@@ -1,5 +1,5 @@
 from src.sql_analytics import run_query
-
+from sklearn.tree import DecisionTreeRegressor
 
 def load_modeling_dataset():
     query = """
@@ -71,3 +71,15 @@ def prepare_features_target(data):
     y = prepared["sale_price"]
 
     return X, y
+
+def train_baseline_model():
+    data = load_modeling_dataset()
+    X, y = prepare_features_target(data)
+
+    model = DecisionTreeRegressor(
+        random_state=1
+    )
+
+    model.fit(X,y)
+
+    return model, X, y
