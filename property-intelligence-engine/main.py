@@ -6,12 +6,13 @@ from src.sql_analytics import (
     get_neighborhood_summary,
     get_latest_property_sales,
     get_neighborhood_price_analytics,
-    get_sale_history_growth
+    get_sale_history_growth,
 )
 from src.ml_model import (
     load_modeling_dataset,
     prepare_features_target,
-    train_baseline_model
+    train_baseline_model,
+    make_sample_predictions
 )
 
 def main():
@@ -49,10 +50,20 @@ def main():
 
     model, X, y = train_baseline_model()
 
-    print("\nBaseline model")
+    sample, predictions = make_sample_predictions(
+        model,
+        X,
+        count=5,
+    )
+
+    print("\nSample properties")
     print("-" * 32)
-    print(model)
-  
+    print(sample.to_string(index=False))
+
+    print("\nPredicted prices")
+    print("-" * 32)
+    print(predictions)
+    
 
 if __name__ == "__main__":
     main()
