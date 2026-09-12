@@ -144,3 +144,38 @@ def evaluate_baseline_split(
     )
 
     return train_mae, val_mae
+
+def get_tree_validation_mae(
+    max_leaf_nodes,
+    train_X,
+    val_X,
+    train_y,
+    val_y,
+):
+    model = DecisionTreeRegressor(
+        max_leaf_nodes=max_leaf_nodes,
+        random_state=42,
+    )
+
+    model.fit(train_X, train_y)
+
+    predictions = model.predict(val_X)
+
+    mae  = mean_absolute_error(val_y, predictions)
+
+    return mae
+
+def compare_tree_sizes(
+    train_X,
+    val_X,
+    train_y,
+    val_y,
+):
+    leaf_options = [5, 10, 25, 50, 100, 200]
+    results = {}
+
+    for max_leaf_nodes in leaf_options:
+        results[max_leaf_nodes] = get_tree_validation_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
+
+    return results
+    
