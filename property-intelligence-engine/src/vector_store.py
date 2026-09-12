@@ -146,3 +146,18 @@ def get_index_summary():
     )
 
     return count, sample
+
+def semantic_search(query, n_results=5):
+    collection = get_property_collection()
+
+    results = collection.query(
+        query_texts=[query],
+        n_results=n_results,
+        include=[
+            "documents",
+            "metadatas",
+            "distances",
+        ],
+    )
+
+    return results

@@ -26,14 +26,15 @@ from src.vector_store import (
     prepare_property_documents,
     get_property_collection,
     build_property_index,
-    get_index_summary
+    get_index_summary,
+    semantic_search
 )
 
 def main():
-    print("\nPROPERTY INTELLIGENCE ENGINE")
-    print("-" * 32)
-    setup_database()
-    show_database_summary()
+    # print("\nPROPERTY INTELLIGENCE ENGINE")
+    # print("-" * 32)
+    # setup_database()
+    # show_database_summary()
 
     # print("\nModeling dataset")
     # print("-" * 32)
@@ -138,14 +139,24 @@ def main():
     # print("-" * 32)
     # print(f"Indexed properties: {collection.count()}")
 
-    count, sample = get_index_summary()
+    # count, sample = get_index_summary()
 
-    print("\nVector index summary")
+    # print("\nVector index summary")
+    # print("-" * 32)
+    # print(f"Records: {count}")
+    # print(f"ID: {sample['ids'][0]}")
+    # print(f"Document: {sample['documents'][0]}")
+    # print(f"Metadata: {sample['metadatas'][0]}")
+
+    results = semantic_search(
+        "spacious family home with parking in a safe area near good schools",
+        n_results=5,
+    )
+
+    print("\nSemantic search")
     print("-" * 32)
-    print(f"Records: {count}")
-    print(f"ID: {sample['ids'][0]}")
-    print(f"Document: {sample['documents'][0]}")
-    print(f"Metadata: {sample['metadatas'][0]}")
+    print(results)
+
 
 if __name__ == "__main__":
     main()
