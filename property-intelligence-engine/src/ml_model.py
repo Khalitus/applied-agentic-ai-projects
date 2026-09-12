@@ -2,6 +2,8 @@ from src.sql_analytics import run_query
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
+from sklearn.ensemble import RandomForestRegressor
+
 
 def load_modeling_dataset():
     query = """
@@ -93,9 +95,8 @@ def make_sample_predictions(model, X, count=5):
 
     return sample, predictions
 
-def evaluate_training_error(model, X, y):
+def evaluate_model(model, X, y):
     predictions = model.predict(X)
-
     mae = mean_absolute_error(y, predictions)
 
     return mae
@@ -192,3 +193,13 @@ def train_tuned_tree(
     model.fit(train_X, train_y)
 
     return model
+
+def train_random_forest(train_X, train_y):
+    model = RandomForestRegressor(
+        random_state=1
+    )
+
+    model.fit(train_X,train_y)
+
+    return model
+

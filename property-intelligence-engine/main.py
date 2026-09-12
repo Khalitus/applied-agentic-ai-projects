@@ -14,11 +14,12 @@ from src.ml_model import (
     prepare_features_target,
     train_baseline_model,
     make_sample_predictions,
-    evaluate_training_error,
+    evaluate_model,
     split_modeling_data,
     evaluate_baseline_split,
     compare_tree_sizes,
-    train_tuned_tree
+    train_tuned_tree,
+    train_random_forest,
 )
 
 def main():
@@ -120,10 +121,14 @@ def main():
     best_leaf_nodes = min(results, key = results.get)
 
     best_model = train_tuned_tree(best_leaf_nodes, train_X, train_y)
-    best_mae = evaluate_training_error(best_model, val_X, val_y)
+    best_mae = evaluate_model(best_model, val_X, val_y)
 
     print(f"\nBest max leaf nodes: {best_leaf_nodes}")
     print(f"Best MAE: {best_mae:,.2f}")
 
+    forest_model = train_random_forest(train_X, train_y)
+    forest_mae = evaluate_model(forest_model, val_X, val_y)
+
+    print(f"\nForest MAE: {forest_mae:,.2f}")
 if __name__ == "__main__":
     main()
