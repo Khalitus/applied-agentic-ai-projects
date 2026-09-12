@@ -1,5 +1,6 @@
 from src.sql_analytics import run_query
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
 def load_modeling_dataset():
@@ -98,3 +99,13 @@ def evaluate_training_error(model, X, y):
     mae = mean_absolute_error(y, predictions)
 
     return mae
+
+def split_modeling_data(X, y):
+    train_X, val_X, train_y, val_y = train_test_split(
+        X,
+        y,
+        test_size=50,
+        random_state=1,
+    )
+
+    return train_X, val_X, train_y, val_y

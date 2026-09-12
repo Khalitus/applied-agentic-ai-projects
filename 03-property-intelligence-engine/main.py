@@ -7,13 +7,15 @@ from src.sql_analytics import (
     get_latest_property_sales,
     get_neighborhood_price_analytics,
     get_sale_history_growth,
+    
 )
 from src.ml_model import (
     load_modeling_dataset,
     prepare_features_target,
     train_baseline_model,
     make_sample_predictions,
-    evaluate_training_error
+    evaluate_training_error,
+    split_modeling_data
 )
 
 def main():
@@ -49,31 +51,40 @@ def main():
 
     print(X.dtypes)
 
-    model, X, y = train_baseline_model()
+    # model, X, y = train_baseline_model()
 
-    sample, predictions = make_sample_predictions(
-        model,
-        X,
-        count=5,
-    )
+    # sample, predictions = make_sample_predictions(
+    #     model,
+    #     X,
+    #     count=5,
+    # )
 
-    print("\nSample properties")
+    # print("\nSample properties")
+    # print("-" * 32)
+    # print(sample.to_string(index=False))
+
+    # print("\nPredicted prices")
+    # print("-" * 32)
+    # print(predictions)
+
+    # mae = evaluate_training_error(
+    #     model,
+    #     X,
+    #     y,
+    # )
+
+    # print("\nTraining MAE")
+    # print("-" * 32)
+    # print(f"{mae:,.2f}")
+
+    train_X, val_X, train_y, val_y = split_modeling_data(X, y)
+
+    print("\nTraining and validation split")
     print("-" * 32)
-    print(sample.to_string(index=False))
-
-    print("\nPredicted prices")
-    print("-" * 32)
-    print(predictions)
-
-    mae = evaluate_training_error(
-        model,
-        X,
-        y,
-    )
-
-    print("\nTraining MAE")
-    print("-" * 32)
-    print(f"{mae:,.2f}")
+    print(f"Training features: {train_X.shape}")
+    print(f"Validation features: {val_X.shape}")
+    print(f"Training target: {train_y.shape}")
+    print(f"Validation target: {val_y.shape}")
     
 
 if __name__ == "__main__":
