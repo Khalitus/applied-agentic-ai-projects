@@ -11,16 +11,13 @@ from src.sql_analytics import (
 from src.ml_model import (
     load_modeling_dataset,
     prepare_features_target,
-    train_baseline_model,
-    make_sample_predictions,
     evaluate_model,
     split_modeling_data,
-    evaluate_baseline_split,
     compare_tree_sizes,
     train_tuned_tree,
     train_random_forest,
     better_model,
-    forest_improvement
+    forest_improvement,
 )
 
 def main():
@@ -56,52 +53,7 @@ def main():
 
     print(X.dtypes)
 
-    # model, X, y = train_baseline_model()
-
-    # sample, predictions = make_sample_predictions(
-    #     model,
-    #     X,
-    #     count=5,
-    # )
-
-    # print("\nSample properties")
-    # print("-" * 32)
-    # print(sample.to_string(index=False))
-
-    # print("\nPredicted prices")
-    # print("-" * 32)
-    # print(predictions)
-
-    # mae = evaluate_training_error(
-    #     model,
-    #     X,
-    #     y,
-    # )
-
-    # print("\nTraining MAE")
-    # print("-" * 32)
-    # print(f"{mae:,.2f}")
-
     train_X, val_X, train_y, val_y = split_modeling_data(X, y)
-
-    # print("\nTraining and validation split")
-    # print("-" * 32)
-    # print(f"Training features: {train_X.shape}")
-    # print(f"Validation features: {val_X.shape}")
-    # print(f"Training target: {train_y.shape}")
-    # print(f"Validation target: {val_y.shape}")
-
-    # train_mae, val_mae = evaluate_baseline_split(
-    #     train_X,
-    #     val_X,
-    #     train_y,
-    #     val_y,
-    # )
-
-    # print("\nUnrestricted decision tree")
-    # print("-" * 32)
-    # print(f"Training MAE: {train_mae:,.2f}")
-    # print(f"Validation MAE: {val_mae:,.2f}")
 
     results = compare_tree_sizes(
         train_X,
