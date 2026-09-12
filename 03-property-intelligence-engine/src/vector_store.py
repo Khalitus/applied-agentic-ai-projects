@@ -1,4 +1,13 @@
 from src.sql_analytics import run_query
+from pathlib import Path
+
+import chromadb
+from chromadb.utils import embedding_functions
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+CHROMA_PATH = BASE_DIR / "data" / "chroma_db"
+COLLECTION_NAME = "properties"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
 def load_property_search_data():
     query = """
@@ -88,3 +97,52 @@ def prepare_property_documents(data):
         })
         
     return ids, documents, metadatas
+
+def get_embedding_function():
+    return embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL
+    )
+
+def get_chroma_client():
+    return chromadb.PersistentClient(
+        path=CHROMA_PATH
+    )
+
+def get_property_collection():
+    client = get_chroma_client()
+
+    collection = client.get_or_create_collection(
+        name=COLLECTION_NAME,
+        embedding_function=get_embedding_function(),
+    )
+
+    return collection
+
+def build_property_index():
+    data = load_property_search_data()
+    ids, documents, metadatas = prepare_property_documents(data)
+
+    collection = get_property_collection()
+
+    collection.upsert(
+        ids=ids,
+        documents=documents,
+        metadatas=metadatas,
+    )
+
+    return collection
+
+def get_index_summary():
+    collection = get_property_collection()
+
+    count = collection.count()
+
+    sample = collection.get(
+        limit=1,
+        include=[
+            "documents",
+            "metadatas",
+        ],
+    )
+
+    return count, sample
