@@ -22,6 +22,34 @@ from src.vector_store import (
     semantic_search,
 )
 
+def show_property_analytics():
+    catalog = get_property_catalog(limit=5)
+    neighborhoods = get_neighborhood_summary()
+    prices = get_neighborhood_price_analytics(limit=10)
+
+    print("\nProperty catalog")
+    print(catalog.to_string(index=False))
+
+    print("\nNeighborhood summary")
+    print(neighborhoods.to_string(index=False))
+
+    print("\nNeighborhood price analytics")
+    print(prices.to_string(index=False))
+
+def show_price_history():
+    property_id = input("\nProperty ID: ").strip().upper()
+
+    history = get_sale_history_growth(limit=1000)
+
+    property_history = history[property_id]
+
+    if property_history.empty:
+        print("\nNo sale history found for that property.")
+        return
+
+    print()
+    print(property_history.to_string(index=False))
+
 def show_menu():
     print("\nProperty Intelligence Engine")
     print("1. View property analytics")
@@ -38,9 +66,9 @@ def main():
         choice = input("\nChoose an option: ").strip()
 
         if choice == "1":
-            pass
+            show_property_analytics()
         elif choice == "2":
-            pass
+            show_price_history()
         elif choice == "3":
             pass
         elif choice == "4":
