@@ -185,6 +185,11 @@ property-intelligence-engine/
 │   ├── sql_analytics.py
 │   ├── ml_model.py
 │   └── vector_store.py
+├── screenshots/
+│   ├── menu.png
+│   ├── price-history.png
+│   ├── property-analytics.png
+│   └── semantic-search.png
 ├── main.py
 ├── requirements.txt
 ├── .gitignore
@@ -253,6 +258,44 @@ Property Intelligence Engine
 4. Search properties semantically
 5. Exit
 ```
+
+## Application preview
+
+The screenshots below are captured from actual CLI runs of the project. Model metrics are shown as text so the README stays aligned with the finalized model-selection logic.
+
+### CLI menu
+
+![Property Intelligence Engine menu](screenshots/menu.png)
+
+### Property analytics
+
+The analytics view combines a property catalog, neighborhood-level summaries, and latest-sale price comparisons produced by the SQL layer.
+
+![Property analytics output](screenshots/property-analytics.png)
+
+### Historical price analysis
+
+Historical analysis uses `LAG()` to compare each transaction with the previous sale of the same property and calculate absolute and percentage price changes.
+
+![Historical price analysis output](screenshots/price-history.png)
+
+### Property valuation models
+
+With the finalized pipeline and `random_state=1`, the current validation results are:
+
+```text
+Best Decision Tree leaf nodes: 50
+Decision Tree MAE: 49,682.11
+Random Forest MAE: 49,842.40
+Better model: Decision Tree
+Random Forest improvement: -0.32%
+```
+
+### Semantic property search
+
+Semantic search combines natural-language similarity with exact metadata filters for property type, minimum bedrooms, and maximum price.
+
+![Semantic property search output](screenshots/semantic-search.png)
 
 ### Example semantic search
 
