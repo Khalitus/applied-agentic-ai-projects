@@ -149,8 +149,11 @@ def main():
     # print(f"Metadata: {sample['metadatas'][0]}")
 
     results = semantic_search(
-        "spacious family home with parking in a safe area near good schools",
+        "spacious family home with parking",
         n_results=5,
+        property_type="House",
+        min_bedrooms = 5,
+        max_price = 5000000
     )
 
     print("\nSemantic search")
