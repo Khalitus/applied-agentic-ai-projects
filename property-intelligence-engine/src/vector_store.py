@@ -149,17 +149,47 @@ def get_index_summary():
 
     return count, sample
 
-def semantic_search(query, n_results=5):
+def semantic_search(query, n_results=5, property_type = None, min_bedrooms = None, max_price = None):
     collection = get_property_collection()
+
+    where = None
+    conditions = []
+    if property_type is not None:
+            conditions.append({
+                "property_type": {
+                    "$eq": property_type
+                }
+            })
+
+    if min_bedrooms is not None:
+            conditions.append({
+                "bedrooms": {
+                    "$gte": min_bedrooms
+                }
+            })
+
+    if max_price is not None:
+            conditions.append({
+                "sale_price": {
+                    "$lte": max_price
+                }
+            })
+
+    if len(conditions) == 1:
+        where = conditions[0]
+    elif len(conditions) > 1:
+        where = {"$and": conditions}
 
     results = collection.query(
         query_texts=[query],
         n_results=n_results,
+        where = where,
         include=[
             "documents",
             "metadatas",
             "distances",
         ],
+        
     )
 
     return format_search_results(results)
