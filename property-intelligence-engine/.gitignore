@@ -31,12 +31,7 @@ config/local.yml
 *.dump
 
 # Local database data directories
-data/
-db_data/
-postgres_data/
-mysql_data/
-.redis/
-
+data/chroma_db/
 
 # Python
 __pycache__/
