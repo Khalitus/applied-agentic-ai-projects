@@ -98,6 +98,40 @@ def evaluate_valuation_models():
     print(f"Better model: {winner}")
     print(f"Random Forest improvement: {improvement:,.2f}%")
 
+def search_properties():
+    query = input("\nDescribe the property you want: ").strip()
+
+    if not query:
+        print("\nSearch query cannot be empty.")
+        return
+
+    property_type = input(
+        "Property type (leave blank for any): "
+    ).strip()
+
+    bedrooms_input = input(
+        "Minimum bedrooms (leave blank for any): "
+    ).strip()
+
+    price_input = input(
+        "Maximum price (leave blank for any): "
+    ).strip()
+
+    results = semantic_search(
+        query=query,
+        n_results=5,
+        property_type=property_type,
+        min_bedrooms=bedrooms_input,
+        max_price=price_input,
+    )
+
+    if results.empty:
+        print("\nNo properties matched your search.")
+        return
+
+    print("\nSearch results")
+    print(results.to_string(index=False))
+
 def show_menu():
     print("\nProperty Intelligence Engine")
     print("1. View property analytics")
@@ -120,7 +154,7 @@ def main():
         elif choice == "3":
             evaluate_valuation_models()
         elif choice == "4":
-            pass
+            search_properties()
         elif choice == "5":
             print("\nGoodbye.")
             break
