@@ -22,6 +22,13 @@ from src.vector_store import (
     semantic_search,
 )
 
+def ensure_vector_index():
+    count, _ = get_index_summary()
+
+    if count == 0:
+        print("\nBuilding property search index...")
+        build_property_index()
+
 def show_property_analytics():
     catalog = get_property_catalog(limit=5)
     neighborhoods = get_neighborhood_summary()
@@ -142,24 +149,29 @@ def show_menu():
 
 def main():
     setup_database()
+    ensure_vector_index()
 
     while True:
         show_menu()
-        choice = input("\nChoose an option: ").strip()
 
-        if choice == "1":
-            show_property_analytics()
-        elif choice == "2":
-            show_price_history()
-        elif choice == "3":
-            evaluate_valuation_models()
-        elif choice == "4":
-            search_properties()
-        elif choice == "5":
-            print("\nGoodbye.")
-            break
-        else:
-            print("\nInvalid option. Choose 1-5.")
+        try:
+            choice = input("\nChoose an option: ").strip()
+
+            if choice == "1":
+                show_property_analytics()
+            elif choice == "2":
+                show_price_history()
+            elif choice == "3":
+                evaluate_valuation_models()
+            elif choice == "4":
+                search_properties()
+            elif choice == "5":
+                print("\nGoodbye.")
+                break
+            else:
+                print("\nInvalid option. Choose 1-5.")
+        except ValueError:
+            print("Invalid numeric filter.")
 
 
 if __name__ == "__main__":
