@@ -22,12 +22,14 @@ from src.vector_store import (
     semantic_search,
 )
 
+
 def ensure_vector_index():
     count, _ = get_index_summary()
 
     if count == 0:
         print("\nBuilding property search index...")
         build_property_index()
+
 
 def show_property_analytics():
     catalog = get_property_catalog(limit=5)
@@ -43,12 +45,14 @@ def show_property_analytics():
     print("\nNeighborhood price analytics")
     print(prices.to_string(index=False))
 
+
 def show_price_history():
     property_id = input("\nProperty ID: ").strip().upper()
 
     history = get_sale_history_growth(limit=1000)
-
-    property_history = history[property_id]
+    property_history = history[
+        history["property_id"] == property_id
+    ]
 
     if property_history.empty:
         print("\nNo sale history found for that property.")
@@ -56,6 +60,7 @@ def show_price_history():
 
     print()
     print(property_history.to_string(index=False))
+
 
 def evaluate_valuation_models():
     data = load_modeling_dataset()
@@ -70,7 +75,10 @@ def evaluate_valuation_models():
         val_y,
     )
 
-    best_leaf_nodes = results.max()
+    best_leaf_nodes = min(
+        results,
+        key=results.get,
+    )
 
     tree_model = train_tuned_tree(
         best_leaf_nodes,
@@ -86,17 +94,24 @@ def evaluate_valuation_models():
 
     forest_model = train_random_forest(
         train_X,
-        train_y
+        train_y,
     )
 
     forest_mae = evaluate_model(
         forest_model,
         val_X,
-        val_y
+        val_y,
     )
 
-    winner = better_model(tree_mae, forest_mae)
-    improvement = forest_improvement(tree_mae, forest_mae)
+    winner = better_model(
+        tree_mae,
+        forest_mae,
+    )
+
+    improvement = forest_improvement(
+        tree_mae,
+        forest_mae,
+    )
 
     print("\nProperty valuation models")
     print(f"Decision Tree leaf nodes: {best_leaf_nodes}")
@@ -104,6 +119,7 @@ def evaluate_valuation_models():
     print(f"Random Forest MAE: {forest_mae:,.2f}")
     print(f"Better model: {winner}")
     print(f"Random Forest improvement: {improvement:,.2f}%")
+
 
 def search_properties():
     query = input("\nDescribe the property you want: ").strip()
@@ -124,12 +140,30 @@ def search_properties():
         "Maximum price (leave blank for any): "
     ).strip()
 
+    property_type = property_type.title() or None
+
+    try:
+        min_bedrooms = (
+            int(bedrooms_input)
+            if bedrooms_input
+            else None
+        )
+
+        max_price = (
+            float(price_input)
+            if price_input
+            else None
+        )
+    except ValueError:
+        print("\nInvalid numeric filter.")
+        return
+
     results = semantic_search(
         query=query,
         n_results=5,
         property_type=property_type,
-        min_bedrooms=bedrooms_input,
-        max_price=price_input,
+        min_bedrooms=min_bedrooms,
+        max_price=max_price,
     )
 
     if results.empty:
@@ -139,6 +173,7 @@ def search_properties():
     print("\nSearch results")
     print(results.to_string(index=False))
 
+
 def show_menu():
     print("\nProperty Intelligence Engine")
     print("1. View property analytics")
@@ -147,31 +182,28 @@ def show_menu():
     print("4. Search properties semantically")
     print("5. Exit")
 
+
 def main():
     setup_database()
     ensure_vector_index()
 
     while True:
         show_menu()
+        choice = input("\nChoose an option: ").strip()
 
-        try:
-            choice = input("\nChoose an option: ").strip()
-
-            if choice == "1":
-                show_property_analytics()
-            elif choice == "2":
-                show_price_history()
-            elif choice == "3":
-                evaluate_valuation_models()
-            elif choice == "4":
-                search_properties()
-            elif choice == "5":
-                print("\nGoodbye.")
-                break
-            else:
-                print("\nInvalid option. Choose 1-5.")
-        except ValueError:
-            print("Invalid numeric filter.")
+        if choice == "1":
+            show_property_analytics()
+        elif choice == "2":
+            show_price_history()
+        elif choice == "3":
+            evaluate_valuation_models()
+        elif choice == "4":
+            search_properties()
+        elif choice == "5":
+            print("\nGoodbye.")
+            break
+        else:
+            print("\nInvalid option. Choose 1-5.")
 
 
 if __name__ == "__main__":
