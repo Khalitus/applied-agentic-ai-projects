@@ -1,164 +1,56 @@
-from src.database import setup_database, show_database_summary
-from src.sql_analytics import (
-    get_property_catalog,
-    get_filtered_properties,
-    get_recent_sales,
-    get_neighborhood_summary,
-    get_latest_property_sales,
-    get_neighborhood_price_analytics,
-    get_sale_history_growth,
-)
+from src.database import setup_database
 from src.ml_model import (
+    better_model,
+    compare_tree_sizes,
+    evaluate_model,
+    forest_improvement,
     load_modeling_dataset,
     prepare_features_target,
-    evaluate_model,
     split_modeling_data,
-    compare_tree_sizes,
-    train_tuned_tree,
     train_random_forest,
-    better_model,
-    forest_improvement,
+    train_tuned_tree,
 )
-
+from src.sql_analytics import (
+    get_neighborhood_price_analytics,
+    get_neighborhood_summary,
+    get_property_catalog,
+    get_sale_history_growth,
+)
 from src.vector_store import (
-    load_property_search_data,
-    build_property_document,
-    prepare_property_documents,
-    get_property_collection,
     build_property_index,
     get_index_summary,
-    semantic_search
+    semantic_search,
 )
 
+def show_menu():
+    print("\nProperty Intelligence Engine")
+    print("1. View property analytics")
+    print("2. Analyze price history")
+    print("3. Evaluate property valuation models")
+    print("4. Search properties semantically")
+    print("5. Exit")
+
 def main():
-    # print("\nPROPERTY INTELLIGENCE ENGINE")
-    # print("-" * 32)
-    # setup_database()
-    # show_database_summary()
+    setup_database()
 
-    # print("\nModeling dataset")
-    # print("-" * 32)
+    while True:
+        show_menu()
+        choice = input("\nChoose an option: ").strip()
 
-    # data = load_modeling_dataset()
+        if choice == "1":
+            pass
+        elif choice == "2":
+            pass
+        elif choice == "3":
+            pass
+        elif choice == "4":
+            pass
+        elif choice == "5":
+            print("\nGoodbye.")
+            break
+        else:
+            print("\nInvalid option. Choose 1-5.")
 
-    # print(data.head().to_string(index=False))
-    # print(f"\nRows: {len(data)}")
-    # print(f"Columns: {len(data.columns)}")
-
-    # X, y = prepare_features_target(data)
-
-    # print("\nFeatures")
-    # print("-" * 32)
-    # print(X.head().to_string(index=False))
-
-    # print("\nTarget")
-    # print("-" * 32)
-    # print(y.head().to_string(index=False))
-
-    # print(X.shape)
-    # print(y.shape)
-
-    # print(X.isna().sum())
-    # print(y.isna().sum())
-
-    # print(X.dtypes)
-
-    # train_X, val_X, train_y, val_y = split_modeling_data(X, y)
-
-    # results = compare_tree_sizes(
-    #     train_X,
-    #     val_X,
-    #     train_y,
-    #     val_y,
-    # )
-
-    # print("\nDecision tree tuning")
-    # print("-" * 32)
-
-    # for leaves, mae in results.items():
-    #     print(
-    #         f"Max leaf nodes: {leaves:<3} "
-    #         f"Validation MAE: {mae:,.2f}"
-    #     )
-
-    # best_leaf_nodes = min(results, key = results.get)
-
-    # best_model = train_tuned_tree(best_leaf_nodes, train_X, train_y)
-    # best_mae = evaluate_model(best_model, val_X, val_y)
-
-    # print(f"\nBest max leaf nodes: {best_leaf_nodes}")
-    # print(f"Best MAE: {best_mae:,.2f}")
-
-    # forest_model = train_random_forest(train_X, train_y)
-    # forest_mae = evaluate_model(forest_model, val_X, val_y)
-
-    # print(f"\nForest MAE: {forest_mae:,.2f}")
-
-    # good_model = better_model(best_mae, forest_mae)
-
-    # print(f"Better model: {good_model}")
-
-    # improvement = forest_improvement(best_mae, forest_mae)
-    # print(f"Random Forest improvement: {improvement:,.2f}%")
-
-    # search_data = load_property_search_data()
-
-    # print("\nProperty search data")
-    # print("-" * 32)
-    # print(search_data.head().to_string(index=False))
-    # print(f"\nRows: {len(search_data)}")
-
-    # row = search_data.iloc[0]
-
-    # document = build_property_document(row)
-
-    # ids, documents, metadatas = prepare_property_documents(
-    #     search_data
-    # )
-
-    # print(len(ids))
-    # print(len(documents))
-    # print(len(metadatas))
-
-    # index = 0
-
-    # print(ids[index])
-    # print(documents[index])
-    # print(metadatas[index])
-
-    # collection = get_property_collection()
-
-    # print("\nVector collection")
-    # print("-" * 32)
-    # print(f"Name: {collection.name}")
-    # print(f"Records: {collection.count()}")
-
-    # collection = build_property_index()
-    
-    # print("\nProperty vector index")
-    # print("-" * 32)
-    # print(f"Indexed properties: {collection.count()}")
-
-    # count, sample = get_index_summary()
-
-    # print("\nVector index summary")
-    # print("-" * 32)
-    # print(f"Records: {count}")
-    # print(f"ID: {sample['ids'][0]}")
-    # print(f"Document: {sample['documents'][0]}")
-    # print(f"Metadata: {sample['metadatas'][0]}")
-
-    results = semantic_search(
-        "spacious family home with parking",
-        n_results=5,
-        property_type="House",
-        min_bedrooms = 5,
-        max_price = 5000000
-    )
-
-    print("\nSemantic search")
-    print("-" * 32)
-    print(results.to_string(index=False))
 
 if __name__ == "__main__":
     main()
