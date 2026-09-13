@@ -50,6 +50,54 @@ def show_price_history():
     print()
     print(property_history.to_string(index=False))
 
+def evaluate_valuation_models():
+    data = load_modeling_dataset()
+    X, y = prepare_features_target(data)
+
+    train_X, val_X, train_y, val_y = split_modeling_data(X, y)
+
+    results = compare_tree_sizes(
+        train_X,
+        val_X,
+        train_y,
+        val_y,
+    )
+
+    best_leaf_nodes = results.max()
+
+    tree_model = train_tuned_tree(
+        best_leaf_nodes,
+        train_X,
+        train_y,
+    )
+
+    tree_mae = evaluate_model(
+        tree_model,
+        val_X,
+        val_y,
+    )
+
+    forest_model = train_random_forest(
+        train_X,
+        train_y
+    )
+
+    forest_mae = evaluate_model(
+        forest_model,
+        val_X,
+        val_y
+    )
+
+    winner = better_model(tree_mae, forest_mae)
+    improvement = forest_improvement(tree_mae, forest_mae)
+
+    print("\nProperty valuation models")
+    print(f"Decision Tree leaf nodes: {best_leaf_nodes}")
+    print(f"Decision Tree MAE: {tree_mae:,.2f}")
+    print(f"Random Forest MAE: {forest_mae:,.2f}")
+    print(f"Better model: {winner}")
+    print(f"Random Forest improvement: {improvement:,.2f}%")
+
 def show_menu():
     print("\nProperty Intelligence Engine")
     print("1. View property analytics")
@@ -70,7 +118,7 @@ def main():
         elif choice == "2":
             show_price_history()
         elif choice == "3":
-            pass
+            evaluate_valuation_models()
         elif choice == "4":
             pass
         elif choice == "5":
