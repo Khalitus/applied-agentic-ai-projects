@@ -1,0 +1,9 @@
+{
+  "customers": 180,
+  "products": 12,
+  "tickets": 720,
+  "escalation_rate": 0.329,
+  "policy_docs": 9,
+  "resolved_cases": 140,
+  "retrieval_eval_queries": 12
+}

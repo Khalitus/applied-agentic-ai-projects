@@ -1,0 +1,13 @@
+query_id,query,expected_source
+Q01,A premium customer reports a hardware failure four months after purchase. What policy should guide the next step?,warranty_policy.md
+Q02,The product arrived cracked yesterday. What evidence and resolution path should support use?,damaged_delivery_policy.md
+Q03,Tracking has not moved for more than five business days. What can support offer?,shipping_delay_policy.md
+Q04,A customer reports a duplicate card charge. Which policy applies?,payment_dispute_policy.md
+Q05,The customer sees an unfamiliar login and thinks the account was taken over. What should happen first?,account_security_policy.md
+Q06,Can a customer return an undamaged product 20 days after delivery?,return_refund_policy.md
+Q07,A customer wants to stop the next subscription renewal. What guidance applies?,subscription_policy.md
+Q08,An urgent premium customer has contacted support four times for the same unresolved problem. Should escalation be considered?,escalation_matrix.md
+Q09,A device keeps disconnecting after restart and basic troubleshooting. What process applies?,technical_support_policy.md
+Q10,A billing dispute also looks like possible account fraud. Which escalation signal matters?,payment_dispute_policy.md
+Q11,A customer dropped a device and cracked the screen. Is standard warranty coverage likely?,warranty_policy.md
+Q12,A return request is outside the normal return window. What should support do?,return_refund_policy.md

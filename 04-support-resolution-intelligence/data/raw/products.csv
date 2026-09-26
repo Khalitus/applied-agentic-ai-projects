@@ -1,0 +1,13 @@
+product_id,product_name,category,warranty_months,unit_price
+P001,NovaPhone X,smartphone,24,699
+P002,NovaPhone Lite,smartphone,12,399
+P003,AeroBuds Pro,audio,12,179
+P004,AeroBuds Mini,audio,12,89
+P005,PulseWatch 3,wearable,18,249
+P006,HomeHub Mini,smart_home,12,129
+P007,HomeCam Secure,smart_home,24,199
+P008,VoltBook Air,laptop,24,1099
+P009,VoltBook Pro,laptop,36,1699
+P010,ChargeDock 4,accessory,12,79
+P011,KeyBoard S,accessory,12,99
+P012,ViewPad 11,tablet,24,549
