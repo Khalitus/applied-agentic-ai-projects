@@ -1,8 +1,4 @@
--- Support Resolution Intelligence
--- Write these queries yourself. Keep them readable and validate the result shape.
-
--- Q1: Escalation rate by issue type.
--- Expected columns: issue_type, ticket_count, escalated_count, escalation_rate
+-- Q1: escalation by issue type
 SELECT
     issue_type,
     COUNT(*) AS ticket_count,
@@ -13,9 +9,7 @@ GROUP BY issue_type
 ORDER BY escalation_rate DESC;
 
 
--- Q2: Escalation rate by customer tier and product category.
--- Requires tickets -> customers -> products joins.
--- Expected columns: customer_tier, category, ticket_count, escalation_rate
+-- Q2: escalation by customer tier and product category
 SELECT
     c.customer_tier,
     p.category,
@@ -23,35 +17,25 @@ SELECT
     ROUND(100.0 * SUM(t.escalated) / COUNT(*), 2) AS escalation_rate
 FROM tickets AS t
 LEFT JOIN customers AS c
-    ON t.customer_id=c.customer_id
+    ON t.customer_id = c.customer_id
 LEFT JOIN products AS p
-    ON t.product_id=p.product_id
-GROUP BY
-    c.customer_tier,
-    p.category
+    ON t.product_id = p.product_id
+GROUP BY c.customer_tier, p.category
 ORDER BY escalation_rate DESC;
 
 
--- Q3: Rank issue types by escalation rate inside each region.
--- Use a CTE plus a window function.
--- Expected columns: region, issue_type, ticket_count, escalation_rate, escalation_rank
+-- Q3: rank issue types by escalation rate inside each region
 WITH issue_stats AS (
     SELECT
         c.region,
         t.issue_type,
         COUNT(*) AS ticket_count,
-        ROUND(
-            100.0 * SUM(t.escalated) / COUNT(*),
-            2
-        ) AS escalation_rate
+        ROUND(100.0 * SUM(t.escalated) / COUNT(*), 2) AS escalation_rate
     FROM tickets AS t
     LEFT JOIN customers AS c
-        ON t.customer_id=c.customer_id
-    GROUP BY
-        c.region,
-        t.issue_type
+        ON t.customer_id = c.customer_id
+    GROUP BY c.region, t.issue_type
 )
-
 SELECT
     region,
     issue_type,
@@ -62,43 +46,36 @@ SELECT
         ORDER BY escalation_rate DESC
     ) AS escalation_rank
 FROM issue_stats
-ORDER BY
-    region,
-    escalation_rank;
+ORDER BY region, escalation_rank;
 
--- Q4: Monthly ticket volume and escalation rate.
--- Expected columns: month, ticket_count, escalation_rate
+
+-- Q4: monthly ticket volume and escalation rate
 SELECT
     STRFTIME('%Y-%m', created_at) AS month,
     COUNT(*) AS ticket_count,
-    ROUND(
-        100.0 * SUM(escalated) / COUNT(*),
-        2
-    ) AS escalation_rate
+    ROUND(100.0 * SUM(escalated) / COUNT(*), 2) AS escalation_rate
 FROM tickets
 GROUP BY month
 ORDER BY month;
 
--- Q5: Find customers with >= 3 tickets and above-average escalation rate.
--- Expected columns: customer_id, customer_tier, ticket_count, escalation_rate
+
+-- Q5: customers with at least 3 tickets and above-average escalation rate
 WITH customer_stats AS (
     SELECT
         c.customer_id,
         c.customer_tier,
         COUNT(*) AS ticket_count,
-        ROUND(
-            100.0 * SUM(t.escalated) / COUNT(*),
-            2
-        ) AS escalation_rate
+        ROUND(100.0 * SUM(t.escalated) / COUNT(*), 2) AS escalation_rate
     FROM tickets AS t
     LEFT JOIN customers AS c
-        ON t.customer_id=c.customer_id
-    GROUP BY
-        c.customer_id,
-        c.customer_tier
+        ON t.customer_id = c.customer_id
+    GROUP BY c.customer_id, c.customer_tier
 )
-
-SELECT *
+SELECT
+    customer_id,
+    customer_tier,
+    ticket_count,
+    escalation_rate
 FROM customer_stats
 WHERE ticket_count >= 3
   AND escalation_rate > (
