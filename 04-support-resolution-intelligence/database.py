@@ -34,12 +34,40 @@ def query(sql, params=None):
 
 
 def load_modeling_frame():
-    """Return one row per ticket using only fields available at ticket intake."""
-    # TODO Task 3: write the JOIN yourself.
-    # Required output should include ticket predictors plus:
-    # region, customer_tier, account_age_months, total_orders,
-    # lifetime_value, category, warranty_months, unit_price.
-    raise NotImplementedError("Complete the SQL JOIN in Task 3.")
+    sql = """
+    SELECT
+        t.ticket_id,
+        t.channel,
+        t.priority,
+        t.issue_type,
+        t.sentiment_score,
+        t.previous_tickets_90d,
+        t.days_since_purchase,
+
+        c.region,
+        c.customer_tier,
+        c.account_age_months,
+        c.total_orders,
+        c.lifetime_value,
+
+        p.category,
+        p.warranty_months,
+        p.unit_price,
+
+        t.escalated,
+
+        t.first_response_minutes,
+        t.resolution_hours,
+        t.resolution_text
+
+    FROM tickets AS t
+    LEFT JOIN customers AS c
+        ON t.customer_id=c.customer_id
+    LEFT JOIN products AS p
+        ON t.product_id=p.product_id
+    """
+
+    return query(sql)
 
 
 def get_ticket(ticket_id):
