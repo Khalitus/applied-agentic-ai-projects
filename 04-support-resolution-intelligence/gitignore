@@ -5,6 +5,7 @@ __pycache__/
 *.egg-info/
 .env
 .DS_Store
+._*
 .vscode/
 .idea/
 .ipynb_checkpoints/
