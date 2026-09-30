@@ -31,6 +31,8 @@ def load_parent_documents():
     documents = []
 
     for path in sorted(KNOWLEDGE_DIR.glob("*.md")):
+        if path.name.startswith("._"):
+            continue
         text = path.read_text(encoding="utf-8")
         documents.append(
             Document(
@@ -45,10 +47,11 @@ def load_parent_documents():
 
     cases = pd.read_csv(KNOWLEDGE_DIR / "resolved_cases.csv")
     for row in cases.to_dict("records"):
+        priority = row["priority"] if pd.notna(row["priority"]) else "unknown"
         text = (
             f"Historical support case {row['case_id']}\n"
             f"Issue type: {row['issue_type']}\n"
-            f"Priority: {row['priority']}\n"
+            f"Priority: {priority}\n"
             f"Customer tier: {row['customer_tier']}\n"
             f"Product: {row['product_name']} ({row['category']})\n"
             f"Issue: {row['issue_text']}\n"
