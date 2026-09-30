@@ -63,9 +63,10 @@ def build_preprocessor():
 def build_pipeline():
     preprocessor = build_preprocessor()
 
-    # TODO Task 5: configure an XGBClassifier.
-    # Start simple; tune only after you have a trustworthy validation baseline.
     model = XGBClassifier(
+        n_estimators=200,
+        learning_rate=0.05,
+        max_depth=4,
         random_state=42,
         eval_metric="logloss",
     )
@@ -97,8 +98,24 @@ def train_and_evaluate():
 
     pipeline = build_pipeline()
 
-    # TODO Task 5: add 5-fold stratified cross-validation on the training split.
-    # Report mean ROC-AUC before fitting the final training model.
+    cv = StratifiedKFold(
+        n_splits=5,
+        shuffle=True,
+        random_state=42,
+    )
+
+    cv_scores = cross_val_score(
+        pipeline,
+        X_train,
+        y_train,
+        cv=cv,
+        scoring="roc_auc",
+    )
+
+    print("\nCross-validation ROC-AUC:")
+    print("Scores:", cv_scores)
+    print("Mean:", round(cv_scores.mean(), 4))
+    print("Std:", round(cv_scores.std(), 4))
 
     pipeline.fit(X_train, y_train)
     probabilities = pipeline.predict_proba(X_test)[:, 1]
