@@ -105,19 +105,30 @@ def build_index():
     children = split_documents(parents)
 
     embeddings = LocalSentenceEmbeddings()
+
     vector_store = Chroma(
         collection_name=COLLECTION_NAME,
         embedding_function=embeddings,
         persist_directory=str(CHROMA_DIR),
     )
 
+    vector_store.reset_collection()
+
     ids = [
         f"{doc.metadata['parent_id']}-{doc.metadata['child_index']}"
         for doc in children
     ]
-    vector_store.add_documents(children, ids=ids)
 
-    print(f"Indexed {len(children)} child chunks from {len(parents)} parent documents.")
+    vector_store.add_documents(
+        documents=children,
+        ids=ids,
+    )
+
+    print(
+        f"Indexed {len(children)} child chunks "
+        f"from {len(parents)} parent documents."
+    )
+
     return vector_store
 
 
