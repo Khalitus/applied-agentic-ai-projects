@@ -74,11 +74,30 @@ def load_parent_documents():
 
 
 def split_documents(parent_documents):
-    # TODO Task 6:
-    # Build child chunks with RecursiveCharacterTextSplitter.
-    # Recommended starting point: chunk_size=550, chunk_overlap=90.
-    # Preserve all parent metadata and add child_index.
-    raise NotImplementedError
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=550,
+        chunk_overlap=90,
+    )
+
+    children = []
+
+    for parent in parent_documents:
+        chunks = splitter.split_text(parent.page_content)
+
+        for child_index, chunk in enumerate(chunks):
+            metadata = {
+                **parent.metadata,
+                "child_index": child_index,
+            }
+
+            children.append(
+                Document(
+                    page_content=chunk,
+                    metadata=metadata,
+                )
+            )
+
+    return children
 
 
 def build_index():
