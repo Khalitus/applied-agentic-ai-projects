@@ -43,12 +43,21 @@ LEAKAGE_COLUMNS = [
 
 
 def build_preprocessor():
-    # TODO Task 4:
-    # 1. median-impute numeric columns
-    # 2. most-frequent-impute categorical columns
-    # 3. one-hot encode categorical columns with handle_unknown="ignore"
-    # 4. combine both branches with ColumnTransformer
-    raise NotImplementedError
+    numeric_pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="median"))
+    ])
+
+    categorical_pipeline = Pipeline([
+        ("imputer", SimpleImputer(missing_values=None, strategy="most_frequent")),
+        ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False,))
+    ])
+
+    preprocessor = ColumnTransformer([
+        ("numeric", numeric_pipeline, NUMERIC_FEATURES),
+        ("categorical", categorical_pipeline, CATEGORICAL_FEATURES),
+    ])
+
+    return preprocessor
 
 
 def build_pipeline():
