@@ -12,7 +12,10 @@ from config import CHROMA_DIR, COLLECTION_NAME, EMBEDDING_MODEL, KNOWLEDGE_DIR
 
 class LocalSentenceEmbeddings(Embeddings):
     def __init__(self, model_name=EMBEDDING_MODEL):
-        self.model = SentenceTransformer(model_name)
+        self.model = SentenceTransformer(
+            model_name,
+            local_files_only=True,
+        )
 
     def embed_documents(self, texts):
         vectors = self.model.encode(texts, normalize_embeddings=True)
