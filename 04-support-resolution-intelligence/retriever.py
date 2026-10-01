@@ -53,12 +53,17 @@ def mmr_search(query, k=4, fetch_k=12):
         lambda_mult=0.6,
     )
 
-
-def advanced_search(query, mode="parent", k=4):
-    if mode == "baseline":
+def retrieve(query, strategy="parent", k=4):
+    strategy = strategy.lower()
+    if strategy == "baseline":
         return baseline_search(query, k=k)
-    if mode == "mmr":
+
+    if strategy == "mmr":
         return mmr_search(query, k=k)
-    if mode == "parent":
+
+    if strategy == "parent":
         return parent_aware_search(query, parent_k=k)
-    raise ValueError(f"Unknown retriever mode: {mode}")
+
+    raise ValueError(
+        f"Unknown retrieval strategy: {strategy}"
+    )
