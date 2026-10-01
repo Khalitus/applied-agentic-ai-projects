@@ -8,16 +8,40 @@ def baseline_search(query, k=4):
     return store.similarity_search(query, k=k)
 
 
-def parent_aware_search(query, child_k=10, parent_k=4):
-    """Retrieve child chunks, then collapse duplicate children back to parent documents."""
+def parent_aware_search(query, parent_k=4, child_k=12):
+    if child_k < parent_k:
+        child_k = parent_k
     store = load_index()
-    child_hits = store.similarity_search(query, k=child_k)
+    parents = load_parent_documents()
 
-    # TODO Task 7:
-    # 1. collect unique parent_id values in retrieval order
-    # 2. map parent_id -> full parent document from load_parent_documents()
-    # 3. return the first parent_k unique parents
-    raise NotImplementedError
+    parent_lookup = {
+        parent.metadata["parent_id"]: parent
+        for parent in parents
+    }
+
+    child_results = baseline_search(query, child_k)
+
+    selected_parents = []
+    seen_parent_ids = set()
+
+    for child in child_results:
+        parent_id = child.metadata["parent_id"]
+
+        if parent_id in seen_parent_ids:
+            continue
+
+        parent = parent_lookup.get(parent_id)
+
+        if parent is None:
+            continue
+
+        selected_parents.append(parent)
+        seen_parent_ids.add(parent_id)
+
+        if len(selected_parents) == parent_k:
+            break
+
+    return selected_parents
 
 
 def mmr_search(query, k=4, fetch_k=12):
