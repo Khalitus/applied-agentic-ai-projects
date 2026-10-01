@@ -1,5 +1,5 @@
 from llm import get_llm
-from retriever import advanced_search
+from retriever import retrieve
 
 
 SYSTEM_RULES = """You are a customer-support decision-support assistant.
@@ -21,8 +21,8 @@ def format_context(documents):
     return "\n\n".join(blocks)
 
 
-def answer_question(question, mode="parent"):
-    documents = advanced_search(question, mode=mode, k=4)
+def answer_question(question, mode="mmr"):
+    documents = retrieve(question, mode=mode, k=4)
     context = format_context(documents)
 
     # TODO Task 9:
