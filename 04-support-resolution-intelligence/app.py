@@ -85,7 +85,10 @@ def analyze(ticket_id, question, retriever_mode):
 
 with gr.Blocks(title="Support Resolution Intelligence") as demo:
     gr.Markdown("# Support Resolution Intelligence")
-    gr.Markdown("Escalation-risk prediction + evidence-grounded support guidance")
+    gr.Markdown(
+        "Predict escalation risk and generate evidence-grounded "
+        "support guidance from policies and historical cases."
+    )
 
     ticket_id = gr.Textbox(label="Ticket ID", value="T00001")
     question = gr.Textbox(
@@ -95,13 +98,13 @@ with gr.Blocks(title="Support Resolution Intelligence") as demo:
     )
     retriever_mode = gr.Radio(
         ["baseline", "mmr", "parent"],
-        value="parent",
+        value="mmr",
         label="Retriever",
     )
     run = gr.Button("Analyze")
 
     risk_output = gr.Textbox(label="ML escalation assessment")
-    answer_output = gr.Textbox(label="RAG guidance", lines=10)
+    answer_output = gr.Textbox(label="RAG guidance")
     source_output = gr.Textbox(label="Sources")
 
     run.click(

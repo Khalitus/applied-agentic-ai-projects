@@ -33,6 +33,11 @@ OLLAMA_MODEL = os.getenv(
     "llama3.2:3b",
 )
 
+GEMINI_THINKING_LEVEL = os.getenv(
+    "GEMINI_THINKING_LEVEL",
+    "low",
+).lower()
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 GEMINI_MODEL = os.getenv(

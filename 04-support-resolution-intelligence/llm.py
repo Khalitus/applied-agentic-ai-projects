@@ -1,11 +1,15 @@
+from functools import lru_cache
+
 from config import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
+    GEMINI_THINKING_LEVEL,
     LLM_PROVIDER,
     OLLAMA_MODEL,
 )
 
 
+@lru_cache(maxsize=1)
 def get_llm():
     if LLM_PROVIDER == "gemini":
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -18,7 +22,7 @@ def get_llm():
         return ChatGoogleGenerativeAI(
             model=GEMINI_MODEL,
             api_key=GEMINI_API_KEY,
-            temperature=0,
+            thinking_level=GEMINI_THINKING_LEVEL,
         )
 
     if LLM_PROVIDER == "ollama":
