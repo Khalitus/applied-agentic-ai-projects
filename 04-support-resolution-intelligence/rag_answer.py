@@ -49,4 +49,4 @@ def generate_answer(
 
     response = llm.invoke(prompt)
 
-    return response
+    return response.text
