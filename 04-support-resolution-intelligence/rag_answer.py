@@ -34,6 +34,25 @@ QUESTION:
 Provide a concise support recommendation grounded in the context.
 """.strip()
 
+def get_sources(documents):
+    sources = []
+    seen = set()
+
+    for doc in documents:
+        source = doc.metadata.get("source")
+
+        if not source or source in seen:
+            continue
+
+        sources.append({
+            "source": source,
+            "source_type": doc.metadata.get("source_type", "unknown"),
+        })
+
+        seen.add(source)
+
+    return sources
+
 def generate_answer(
     question,
     strategy="mmr",
@@ -49,4 +68,7 @@ def generate_answer(
 
     response = llm.invoke(prompt)
 
-    return response.text
+    return {
+        "answer": response.text,
+        "sources": get_sources(documents),
+    }
