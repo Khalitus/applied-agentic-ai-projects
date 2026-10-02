@@ -28,6 +28,17 @@ def build_ticket_context(ticket):
     return "\n".join(lines)
 
 def analyze(ticket_id, question, retriever_mode):
+    ticket_id = (ticket_id or "").strip()
+    question = (question or "").strip()
+    if not ticket_id:
+        return "Enter a ticket ID.", "", ""
+
+    if not question:
+        return "", "Enter a support question.", ""
+
+    if retriever_mode not in {"baseline", "mmr", "parent"}:
+        return "", "Invalid retriever selection.", ""
+    
     ticket = get_ticket(ticket_id.strip())
 
     if ticket is None:
@@ -38,7 +49,14 @@ def analyze(ticket_id, question, retriever_mode):
         for key in NUMERIC_FEATURES + CATEGORICAL_FEATURES
     }
 
-    risk = predict_escalation(model_features)
+    try:
+        risk = predict_escalation(model_features)
+    except FileNotFoundError:
+        return (
+            "Escalation model is unavailable. Train the model first.",
+            "",
+            "",
+        )
 
     risk_label = (
         "Escalation likely"
@@ -60,11 +78,18 @@ def analyze(ticket_id, question, retriever_mode):
         f"{question.strip()}"
     )
 
-    rag_result = generate_answer(
-        rag_question,
-        strategy=retriever_mode,
-        k=4,
-    )
+    try:
+        rag_result = generate_answer(
+            rag_question,
+            strategy=retriever_mode,
+            k=4,
+        )
+    except Exception as error:
+        return (
+            risk_text,
+            f"RAG guidance unavailable: {error}",
+            "",
+        )
 
     source_lines = []
 
