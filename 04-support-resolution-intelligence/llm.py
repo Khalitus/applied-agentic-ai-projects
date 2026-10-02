@@ -1,15 +1,34 @@
-from config import LLM_PROVIDER, OLLAMA_MODEL, OPENAI_MODEL
+from config import (
+    GEMINI_API_KEY,
+    GEMINI_MODEL,
+    LLM_PROVIDER,
+    OLLAMA_MODEL,
+)
 
 
 def get_llm():
+    if LLM_PROVIDER == "gemini":
+        from langchain_google_genai import ChatGoogleGenerativeAI
+
+        if not GEMINI_API_KEY:
+            raise ValueError(
+                "Set GEMINI_API_KEY in .env.local."
+            )
+
+        return ChatGoogleGenerativeAI(
+            model=GEMINI_MODEL,
+            api_key=GEMINI_API_KEY,
+            temperature=0,
+        )
+
     if LLM_PROVIDER == "ollama":
         from langchain_ollama import ChatOllama
-        return ChatOllama(model=OLLAMA_MODEL, temperature=0)
 
-    if LLM_PROVIDER == "openai":
-        from langchain_openai import ChatOpenAI
-        if not OPENAI_MODEL:
-            raise ValueError("Set OPENAI_MODEL in .env.")
-        return ChatOpenAI(model=OPENAI_MODEL, temperature=0)
+        return ChatOllama(
+            model=OLLAMA_MODEL,
+            temperature=0,
+        )
 
-    raise ValueError("LLM_PROVIDER must be 'ollama' or 'openai'.")
+    raise ValueError(
+        "LLM_PROVIDER must be 'gemini' or 'ollama'."
+    )
