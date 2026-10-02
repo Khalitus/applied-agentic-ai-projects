@@ -2,11 +2,36 @@ import gradio as gr
 
 from database import get_ticket
 from ml_model import CATEGORICAL_FEATURES, NUMERIC_FEATURES, predict_escalation
-from rag_answer import answer_question
+from rag_answer import generate_answer
 
+def build_ticket_context(ticket):
+    fields = [
+        "issue_type",
+        "priority",
+        "channel",
+        "customer_tier",
+        "category",
+        "region",
+        "sentiment_score",
+        "previous_tickets_90d",
+        "days_since_purchase",
+    ]
+
+    lines = []
+
+    for field in fields:
+        value = ticket
+
+        if value is not None:
+            lines.append(
+                f"{field}: {value}"
+            )
+
+    return "\n".join(lines)
 
 def analyze(ticket_id, question, retriever_mode):
     ticket = get_ticket(ticket_id.strip())
+
     if ticket is None:
         return "Ticket not found.", "", ""
 
@@ -14,15 +39,50 @@ def analyze(ticket_id, question, retriever_mode):
         key: ticket.get(key)
         for key in NUMERIC_FEATURES + CATEGORICAL_FEATURES
     }
+
     risk = predict_escalation(model_features)
 
-    # TODO Task 10:
-    # Enrich the user's question with useful ticket context,
-    # call answer_question(), and return:
-    # 1. escalation prediction
-    # 2. generated guidance
-    # 3. retrieved source list
-    raise NotImplementedError
+    risk_label = (
+        "Escalation likely"
+        if risk["prediction"]
+        else "Escalation not predicted"
+    )
+
+    risk_text = (
+        f"{risk_label}\n"
+        f"Probability: {risk['probability']:.1%}"
+    )
+
+    ticket_context = build_ticket_context(ticket)
+
+    rag_question = (
+        f"Ticket context:\n"
+        f"{ticket_context}\n\n"
+        f"Support question:\n"
+        f"{question.strip()}"
+    )
+
+    rag_result = generate_answer(
+        rag_question,
+        strategy=retriever_mode,
+        k=4,
+    )
+
+    source_lines = []
+
+    for source in rag_result["sources"]:
+        source_lines.append(
+            f"{source["source_type"]}: {source["source"]}"
+
+        )
+
+    source_text = "\n".join(source_lines)
+
+    return (
+        risk_text,
+        rag_result["answer"],
+        source_text,
+    )
 
 
 with gr.Blocks(title="Support Resolution Intelligence") as demo:
