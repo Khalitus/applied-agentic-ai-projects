@@ -20,12 +20,10 @@ def build_ticket_context(ticket):
     lines = []
 
     for field in fields:
-        value = ticket
+        value = ticket.get(field)
 
         if value is not None:
-            lines.append(
-                f"{field}: {value}"
-            )
+            lines.append(f"{field}: {value}")
 
     return "\n".join(lines)
 
