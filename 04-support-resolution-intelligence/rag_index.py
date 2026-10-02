@@ -1,5 +1,5 @@
 import hashlib
-
+from functools import lru_cache
 import pandas as pd
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
@@ -135,6 +135,7 @@ def build_index():
     return vector_store
 
 
+@lru_cache(maxsize=1)
 def load_index():
     return Chroma(
         collection_name=COLLECTION_NAME,
