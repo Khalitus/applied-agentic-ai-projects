@@ -12,10 +12,6 @@ def format_context(documents):
     return "\n\n".join(blocks)
 
 
-def answer_question(question, mode="mmr"):
-    documents = retrieve(question, mode=mode, k=4)
-    context = format_context(documents)
-
 def build_prompt(question, context):
     return f"""
 You are a support resolution assistant.
@@ -37,3 +33,20 @@ QUESTION:
 
 Provide a concise support recommendation grounded in the context.
 """.strip()
+
+def generate_answer(
+    question,
+    strategy="mmr",
+    k=4,
+):
+    documents = retrieve(question, strategy=strategy, k=k)
+
+    context = format_context(documents)
+
+    prompt = build_prompt(question, context)
+
+    llm = get_llm()
+
+    response = llm.invoke(prompt)
+
+    return response
