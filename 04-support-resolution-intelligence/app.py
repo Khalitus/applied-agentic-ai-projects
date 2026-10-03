@@ -129,8 +129,14 @@ with gr.Blocks(title="Support Resolution Intelligence") as demo:
     run = gr.Button("Analyze")
 
     risk_output = gr.Textbox(label="ML escalation assessment")
-    answer_output = gr.Textbox(label="RAG guidance")
-    source_output = gr.Textbox(label="Sources")
+    answer_output = gr.Markdown(
+        label="RAG guidance",
+    )
+
+    source_output = gr.Textbox(
+        label="Retrieved evidence",
+        lines=5,
+    )
 
     run.click(
         analyze,

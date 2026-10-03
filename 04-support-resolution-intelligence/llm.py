@@ -23,6 +23,8 @@ def get_llm():
             model=GEMINI_MODEL,
             api_key=GEMINI_API_KEY,
             thinking_level=GEMINI_THINKING_LEVEL,
+            timeout=30,
+            max_retries=1,
         )
 
     if LLM_PROVIDER == "ollama":
