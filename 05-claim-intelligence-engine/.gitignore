@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+._*
+**/._*
+
+# Models
+models/*.joblib
+models/*.pkl
+
+# Vector database
+vector_store/
+chroma_db/
+
+# Generated database
+data/database/*.db
+data/database/*.sqlite
+data/database/*.sqlite3
+
+# Generated processed data
+data/processed/*.csv
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
