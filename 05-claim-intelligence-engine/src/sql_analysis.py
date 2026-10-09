@@ -71,6 +71,8 @@ def comparable_claims(
             vehicle_type,
             damage_severity,
             repair_estimate,
+            vehicle_value,
+            prior_claims,
             claim_amount
         FROM claims
         WHERE incident_type = ?
@@ -122,6 +124,6 @@ def main():
     )
 
     print(result.to_string(index=False))
-    
+
 if __name__ == "__main__":
     main()
