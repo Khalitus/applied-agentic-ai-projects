@@ -147,9 +147,3 @@ Potential outliers: 71
 
 EDA complete
 ```
-
-## 6. Conclusion and next step
-
-Task 02 established a reproducible cleaning-and-EDA workflow, preserved the original 1,200 valid synthetic records, and identified the distributional characteristics that should inform modeling decisions.
-
-**Next:** Task 03 — SQLite integration and historical claim comparisons. Later, evaluate a baseline prediction model against an engineered-feature model using a held-out test set, including attention to higher-value claims.
