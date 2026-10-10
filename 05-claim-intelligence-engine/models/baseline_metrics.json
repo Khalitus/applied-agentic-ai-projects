@@ -1,0 +1,28 @@
+{
+  "training_rows": 840,
+  "validation_rows": 180,
+  "features": [
+    "driver_age",
+    "vehicle_age",
+    "annual_mileage",
+    "vehicle_value",
+    "repair_estimate",
+    "prior_claims",
+    "incident_type",
+    "vehicle_type",
+    "weather",
+    "region",
+    "police_reported",
+    "damage_severity"
+  ],
+  "dummy": {
+    "mae": 4587.41,
+    "rmse": 6015.94,
+    "r2": -0.0
+  },
+  "xgboost": {
+    "mae": 886.64,
+    "rmse": 1105.9,
+    "r2": 0.97
+  }
+}
