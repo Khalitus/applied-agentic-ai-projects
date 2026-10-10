@@ -1,0 +1,33 @@
+{
+  "training_rows": 840,
+  "validation_rows": 180,
+  "features": [
+    "driver_age",
+    "vehicle_age",
+    "annual_mileage",
+    "vehicle_value",
+    "repair_estimate",
+    "prior_claims",
+    "incident_type",
+    "vehicle_type",
+    "weather",
+    "region",
+    "police_reported",
+    "damage_severity",
+    "policy_tenure_days",
+    "repair_value_ratio",
+    "mileage_age_ratio",
+    "has_prior_claim",
+    "incident_month",
+    "incident_quarter",
+    "incident_weekday",
+    "is_weekend",
+    "driver_age_band",
+    "vehicle_age_band"
+  ],
+  "metrics": {
+    "mae": 884.53,
+    "rmse": 1109.61,
+    "r2": 0.97
+  }
+}

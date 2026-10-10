@@ -1,0 +1,9 @@
+{
+  "selected_model": "engineered",
+  "feature_mode": "engineered",
+  "model_path": "models/claim_engineered.joblib",
+  "selection_metric": "validation_mae",
+  "baseline_mae": 886.64,
+  "engineered_mae": 884.53,
+  "test_evaluated": false
+}
