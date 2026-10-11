@@ -21,7 +21,7 @@ METRICS_PATH = MODEL_DIR / "model_metrics.json"
 
 KNOWLEDGE_DIR = ROOT_DIR / "knowledge"
 
-POLICY_DIR = ROOT_DIR / "data" / "policies"
+KNOWLEDGE_DIR = ROOT_DIR / "knowledge"
 VECTOR_STORE_DIR = ROOT_DIR / "data" / "vector_store"
 
 TARGET_COLUMN = "claim_amount"

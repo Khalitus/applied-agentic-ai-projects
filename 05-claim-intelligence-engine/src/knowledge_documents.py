@@ -1,4 +1,7 @@
+from importlib.resources import path
+
 import pandas as pd
+from pathlib import Path
 
 def build_case_records(
     claims: pd.DataFrame,
@@ -65,5 +68,75 @@ def build_case_records(
 
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate case record IDs found.")
+
+    return records
+
+def chunk_policy_text(
+    text: str,
+    chunk_words: int = 130,
+    overlap_words: int = 20,
+) -> list[str]:
+    if chunk_words <= 0:
+        raise ValueError("Chunk size must be positive.")
+
+    if not 0 <= overlap_words < chunk_words:
+        raise ValueError("Invalid chunk overlap.")
+
+    words = text.split()
+
+    if not words:
+        return []
+
+    chunks = []
+    start = 0
+
+    while start < len(words):
+        end = min(start + chunk_words, len(words))
+
+        chunks.append(" ".join(words[start:end]))
+
+        if end == len(words):
+            break
+
+        start = end - overlap_words
+
+    return chunks
+
+def build_policy_records(knowledge_dir: Path) -> list[dict]:
+    paths = sorted(
+        path
+        for path in knowledge_dir.glob("*.md")
+        if path.is_file() and not path.name.startswith(".")
+    )
+
+    if not paths:
+        raise FileNotFoundError(
+            f"No valid policy documents found in {knowledge_dir}"
+        )
+    
+    if source_type is None:
+        source_type = knowledge_dir.name
+
+    records = []
+
+    for path in paths:
+        text = path.read_text(encoding="utf-8").strip()
+
+        if not text:
+            raise ValueError(f"Empty policy document: {path.name}")
+
+        chunks = chunk_policy_text(text)
+        doc_id = path.stem
+        
+        for index, chunk in enumerate(chunks):
+            records.append({
+                "id": f"policy::{doc_id}::{index:03d}",
+                "document": chunk,
+                "metadata": {
+                    "source_file": doc_id,
+                    "source_type": source_type,
+                    "chunk_index": index
+                }
+            })
 
     return records
