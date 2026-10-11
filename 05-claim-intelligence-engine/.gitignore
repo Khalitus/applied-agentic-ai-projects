@@ -58,3 +58,5 @@ dist/
 # Temporary files
 *.tmp
 *.temp
+
+data/sample_images/
