@@ -1,5 +1,3 @@
-from importlib.resources import path
-
 import pandas as pd
 from pathlib import Path
 
@@ -113,9 +111,6 @@ def build_policy_records(knowledge_dir: Path) -> list[dict]:
         raise FileNotFoundError(
             f"No valid policy documents found in {knowledge_dir}"
         )
-    
-    if source_type is None:
-        source_type = knowledge_dir.name
 
     records = []
 
@@ -126,17 +121,16 @@ def build_policy_records(knowledge_dir: Path) -> list[dict]:
             raise ValueError(f"Empty policy document: {path.name}")
 
         chunks = chunk_policy_text(text)
-        doc_id = path.stem
-        
+
         for index, chunk in enumerate(chunks):
             records.append({
-                "id": f"policy::{doc_id}::{index:03d}",
+                "id": f"policy::{path.stem}::{index:03d}",
                 "document": chunk,
                 "metadata": {
-                    "source_file": doc_id,
-                    "source_type": source_type,
-                    "chunk_index": index
-                }
+                    "source_file": path.name,
+                    "source_type": "synthetic_policy",
+                    "chunk_index": index,
+                },
             })
 
     return records

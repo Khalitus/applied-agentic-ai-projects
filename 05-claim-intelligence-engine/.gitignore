@@ -60,3 +60,4 @@ dist/
 *.temp
 
 data/sample_images/
+data/vector_store/

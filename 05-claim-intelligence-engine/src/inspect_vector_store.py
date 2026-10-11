@@ -53,21 +53,25 @@ def main():
         include=["documents", "metadatas"]
     )
 
-    if policy_stored["documents"]:
-        print("\nSample policy document 1:")
-        print(policy_stored["documents"][0])
-        print("\nSample policy metadata 1:")
-        print(policy_stored["metadatas"][0])
+    if not policy_stored["documents"]:
+        raise ValueError("Policy collection is empty.")
 
-        print("\nSample policy document 2:")
-        print(policy_stored["documents"][1])
-        print("\nSample policy metadata 2:")
-        print(policy_stored["metadatas"][1])
+    print("\nIndexed policy sources")
 
-        print("\nSample policy document 3:")
-        print(policy_stored["documents"][2])
-        print("\nSample policy metadata 3:")
-        print(policy_stored["metadatas"][2])
+    source_files = set()
+
+    for document, metadata in zip(
+        policy_stored["documents"],
+        policy_stored["metadatas"],
+    ):
+        source_files.add(metadata["source_file"])
+
+        print(f"\nSource: {metadata['source_file']}")
+        print(f"Chunk: {metadata['chunk_index']}")
+        print(document)
+
+    for source in sorted(source_files):
+        print(f"Indexed: {source}")
 
 if __name__ == "__main__":
     main()
