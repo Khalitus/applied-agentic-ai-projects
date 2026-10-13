@@ -1,0 +1,43 @@
+{
+  "scenario_count": 3,
+  "policy_hit_at_2": 1.0,
+  "scenarios": [
+    {
+      "scenario": "collision_documentation",
+      "expected_policy": "collision_policy.md",
+      "retrieved_policy_sources": [
+        "collision_policy.md",
+        "claim_review_policy.md"
+      ],
+      "policy_hit_at_2": true,
+      "historical_filter_valid": true,
+      "vehicle_match_rate": 1.0,
+      "mean_repair_difference": 479.5
+    },
+    {
+      "scenario": "theft_reporting",
+      "expected_policy": "theft_policy.md",
+      "retrieved_policy_sources": [
+        "theft_policy.md",
+        "collision_policy.md"
+      ],
+      "policy_hit_at_2": true,
+      "historical_filter_valid": true,
+      "vehicle_match_rate": 0.4,
+      "mean_repair_difference": 4460.18
+    },
+    {
+      "scenario": "severe_claim_review",
+      "expected_policy": "claim_review_policy.md",
+      "retrieved_policy_sources": [
+        "collision_policy.md",
+        "claim_review_policy.md"
+      ],
+      "policy_hit_at_2": true,
+      "historical_filter_valid": true,
+      "vehicle_match_rate": 1.0,
+      "mean_repair_difference": 2504.44
+    }
+  ],
+  "evaluation_note": "Small synthetic scenario evaluation. Not a production relevance benchmark."
+}
