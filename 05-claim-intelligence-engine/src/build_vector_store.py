@@ -25,6 +25,10 @@ BATCH_SIZE = 64
 
 @lru_cache(maxsize=1)
 def get_embedding_function():
+    import torch
+
+    torch.set_num_threads(1)
+
     return embedding_functions.SentenceTransformerEmbeddingFunction(
         model_name=EMBEDDING_MODEL,
         device="cpu",
