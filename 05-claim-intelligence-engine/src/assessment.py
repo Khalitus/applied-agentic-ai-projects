@@ -42,9 +42,12 @@ Grounding rules:
     convert "should", "may", or "recommended" into mandatory
     requirements unless the source supports that interpretation.
 
-15. A null policy_coverage_note means no known incident-specific
-    retrieval gap was detected. It does not confirm actual
-    coverage, deductibles, policy limits, or eligibility.
+15. A policy retrieval status saying the expected demonstration
+    policy was retrieved does not confirm actual coverage,
+    deductibles, policy limits, or eligibility.
+16. Never describe recommended documentation as required. If a
+    policy says documentation "should include" an item, preserve
+    that wording and do not strengthen it into a requirement.
 
 Return one valid JSON object with exactly these fields:
 - summary: string
@@ -101,16 +104,20 @@ def build_assessment_prompt(
     evidence: dict,
 ) -> str:
 
+    coverage_note = get_policy_coverage_note(claim, evidence)
+    coverage_status = coverage_note or (
+        "The expected incident-specific demonstration policy "
+        "was retrieved. Actual coverage terms, deductibles, "
+        "and policy limits have not been verified."
+    )
+
     payload = {
         "submitted_claim": claim,
         "ml_prediction": prediction,
         "image_observations": image_result,
         "historical_cases": evidence["historical_cases"],
         "retrieved_policy_passages": evidence["policies"],
-        "policy_coverage_note": get_policy_coverage_note(
-            claim,
-            evidence,
-        ),
+        "policy_retrieval_status": coverage_status,
     }
 
     return (

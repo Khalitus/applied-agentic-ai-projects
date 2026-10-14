@@ -146,6 +146,23 @@ def test_policy_coverage_gap(incident_type):
     assert f"available for {incident_type} claims" in note
 
 
+def test_assessment_prompt_has_explicit_policy_retrieval_status():
+    prompt = assessment.build_assessment_prompt(
+        BASE_CLAIM,
+        {"predicted_amount": 7298.65},
+        {"image_provided": False},
+        MOCK_EVIDENCE,
+    )
+    payload = json.loads(prompt.split("\n\n", 1)[1])
+
+    assert "policy_coverage_note" not in payload
+    assert payload["policy_retrieval_status"] == (
+        "The expected incident-specific demonstration policy "
+        "was retrieved. Actual coverage terms, deductibles, "
+        "and policy limits have not been verified."
+    )
+
+
 def test_optional_image_path(monkeypatch):
     received = []
     mock_pipeline(monkeypatch, json.dumps(MOCK_ASSESSMENT))
