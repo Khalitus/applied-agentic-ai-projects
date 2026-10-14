@@ -20,9 +20,7 @@ MODEL_PATH = MODEL_DIR / "claim_model.joblib"
 METRICS_PATH = MODEL_DIR / "model_metrics.json"
 
 KNOWLEDGE_DIR = ROOT_DIR / "knowledge"
-
-KNOWLEDGE_DIR = ROOT_DIR / "knowledge"
-VECTOR_STORE_DIR = ROOT_DIR / "data" / "vector_store"
+VECTOR_STORE_DIR = DATA_DIR / "vector_store"
 
 TARGET_COLUMN = "claim_amount"
 RANDOM_STATE = 42

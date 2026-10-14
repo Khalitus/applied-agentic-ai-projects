@@ -1,19 +1,17 @@
 import json
 import math
+from functools import lru_cache
 
 import joblib
 import pandas as pd
 
-from src.config import MODEL_DIR, ROOT_DIR
+from src.config import MODEL_DIR, PROCESSED_DATA_DIR, ROOT_DIR
 from src.features import create_features
 from src.train_baseline import (
     CATEGORICAL_FEATURES,
     FEATURES as RAW_FEATURES,
     NUMERIC_FEATURES,
 )
-from functools import lru_cache
-
-from src.config import PROCESSED_DATA_DIR
 
 SELECTION_PATH = MODEL_DIR / "model_selection.json"
 
@@ -164,6 +162,7 @@ def validate_claim(claim: dict) -> pd.DataFrame:
         
     return df
 
+@lru_cache(maxsize=1)
 def load_selected_model():
     if not SELECTION_PATH.exists():
         raise FileNotFoundError(

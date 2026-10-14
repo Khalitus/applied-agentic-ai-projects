@@ -1,4 +1,4 @@
-import json
+from functools import lru_cache
 
 import chromadb
 
@@ -11,6 +11,7 @@ CASE_CANDIDATES = 25
 CASE_TOP_K = 5
 POLICY_TOP_K = 2
 
+@lru_cache(maxsize=1)
 def load_collections():
     if not VECTOR_STORE_DIR.exists():
         raise FileNotFoundError(

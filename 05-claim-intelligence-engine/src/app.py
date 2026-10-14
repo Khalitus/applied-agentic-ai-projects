@@ -4,77 +4,21 @@ import gradio as gr
 import pandas as pd
 
 from src.assessment import assess_claim
-from src.config import PROCESSED_DATA_DIR
-from src.predict import validate_claim
-from src.config import ROOT_DIR
-
-SPLIT_PATH = ROOT_DIR / "data" / "splits" / "claim_splits.csv"
+from src.predict import (
+    DATE_FIELDS,
+    RAW_FEATURES,
+    get_training_categories,
+    validate_claim,
+)
 
 logger = logging.getLogger(__name__)
 
-DATA_PATH = PROCESSED_DATA_DIR / "claims_processed.csv"
+INPUT_FIELDS = DATE_FIELDS + RAW_FEATURES
 
-INPUT_FIELDS = [
-    "incident_date",
-    "policy_start_date",
-    "driver_age",
-    "vehicle_age",
-    "annual_mileage",
-    "vehicle_value",
-    "repair_estimate",
-    "prior_claims",
-    "incident_type",
-    "vehicle_type",
-    "weather",
-    "region",
-    "police_reported",
-    "damage_severity",
-]
-
-CATEGORICAL_FIELDS = [
-    "incident_type",
-    "vehicle_type",
-    "weather",
-    "region",
-    "police_reported",
-    "damage_severity",
-]
-
-
-def load_category_choices() -> dict:
-    data = pd.read_csv(DATA_PATH)
-    splits = pd.read_csv(SPLIT_PATH)
-
-    training_ids = set(
-        splits.loc[splits["split"] == "train", "claim_id"]
-    )
-
-    data = data.loc[data["claim_id"].isin(training_ids)]
-
-    choices = {}
-
-    for column in CATEGORICAL_FIELDS:
-        values = (
-            data[column]
-            .dropna()
-            .astype(str)
-            .str.strip()
-            .str.lower()
-            .unique()
-            .tolist()
-        )
-
-        choices[column] = sorted(values)
-
-        if not choices[column]:
-            raise ValueError(
-                f"No category choices found for {column}."
-            )
-
-    return choices
-
-
-CATEGORY_CHOICES = load_category_choices()
+CATEGORY_CHOICES = {
+    field: sorted(values)
+    for field, values in get_training_categories().items()
+}
 
 DEMO_CLAIM = {
     "incident_date": "2026-09-15",

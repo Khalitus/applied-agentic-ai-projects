@@ -1,0 +1,37 @@
+{
+  "label": "after",
+  "iterations": 3,
+  "prediction": {
+    "first_call_seconds": 7.1044,
+    "warm_median_seconds": 0.0494,
+    "runs_seconds": [
+      7.1044,
+      0.0517,
+      0.0471
+    ]
+  },
+  "retrieval": {
+    "first_call_seconds": 53.8351,
+    "warm_median_seconds": 0.117,
+    "runs_seconds": [
+      53.8351,
+      0.1274,
+      0.1066
+    ]
+  },
+  "reference_output": {
+    "predicted_amount": 7298.65,
+    "selected_model": "engineered",
+    "historical_claim_ids": [
+      "CLM00797",
+      "CLM00599",
+      "CLM01094",
+      "CLM00215",
+      "CLM01060"
+    ],
+    "policy_chunk_ids": [
+      "policy::collision_policy::000",
+      "policy::claim_review_policy::000"
+    ]
+  }
+}
