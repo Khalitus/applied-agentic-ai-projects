@@ -136,3 +136,19 @@ def test_optional_photograph_is_forwarded(monkeypatch):
     app.run_assessment(*valid_values(), "sample_vehicle.jpg")
 
     assert captured["image_path"] == "sample_vehicle.jpg"
+
+
+def test_provider_failure_clears_ui(monkeypatch):
+    def failing_backend(*args, **kwargs):
+        raise TimeoutError("Provider request timed out.")
+
+    monkeypatch.setattr(app, "assess_claim", failing_backend)
+
+    values = [app.DEMO_CLAIM[field] for field in app.INPUT_FIELDS]
+    output = app.run_assessment(*values, None)
+
+    assert "Assessment unavailable" in output[0]
+    assert output[1] == ""
+    assert output[2] == ""
+    assert output[3].empty
+    assert output[4].empty

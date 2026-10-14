@@ -5,5 +5,5 @@
   "selection_metric": "validation_mae",
   "baseline_mae": 886.64,
   "engineered_mae": 884.53,
-  "test_evaluated": false
+  "test_evaluated": true
 }

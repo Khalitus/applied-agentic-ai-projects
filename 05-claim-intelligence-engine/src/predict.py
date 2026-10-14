@@ -11,7 +11,9 @@ from src.train_baseline import (
     FEATURES as RAW_FEATURES,
     NUMERIC_FEATURES,
 )
+from functools import lru_cache
 
+from src.config import PROCESSED_DATA_DIR
 
 SELECTION_PATH = MODEL_DIR / "model_selection.json"
 
@@ -21,6 +23,39 @@ DATE_FIELDS = [
 ]
 
 REQUIRED_FIELDS = RAW_FEATURES + DATE_FIELDS
+
+@lru_cache(maxsize=1)
+def get_training_categories() -> dict[str, set[str]]:
+    data_path = PROCESSED_DATA_DIR / "claims_processed.csv"
+    split_path = ROOT_DIR / "data" / "splits" / "claim_splits.csv"
+
+    claims = pd.read_csv(data_path)
+    splits = pd.read_csv(split_path)
+
+    train_ids = set(
+        splits.loc[
+            splits["split"] == "train",
+            "claim_id",
+        ]
+    )
+
+    training = claims.loc[
+        claims["claim_id"].isin(train_ids)
+    ]
+
+    if len(training) != len(train_ids):
+        raise ValueError("Training category data is incomplete.")
+
+    return {
+        column: set(
+            training[column]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .str.lower()
+        )
+        for column in CATEGORICAL_FEATURES
+    }
 
 def validate_claim(claim: dict) -> pd.DataFrame:
     if not isinstance(claim, dict):
@@ -117,6 +152,16 @@ def validate_claim(claim: dict) -> pd.DataFrame:
             "Policy start date cannot follow incident date."
         )
 
+    allowed = get_training_categories()
+
+    for column in CATEGORICAL_FEATURES:
+        value = df.at[0, column]
+
+        if value not in allowed[column]:
+            raise ValueError(
+                f"Unsupported category for {column}: {value}"
+            )
+        
     return df
 
 def load_selected_model():

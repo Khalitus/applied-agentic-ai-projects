@@ -1,0 +1,7 @@
+{
+  "model_name": "engineered",
+  "test_rows": 180,
+  "mae": 904.2073,
+  "rmse": 1109.6998,
+  "r2": 0.9731
+}
