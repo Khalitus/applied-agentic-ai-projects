@@ -105,7 +105,7 @@ The revised `chronological_split()` sorts by date and hour, calculates its cutof
 | First testing date | 2012-08-07 |
 | Shared dates across splits | None |
 
-The 80/20 fraction applies to unique dates, so the record counts are not required to form an exact 80/20 partition. This is a **single chronological holdout**, not rolling-origin cross-validation. Additional temporal checks and error analysis belong to later modeling tasks.
+The 80/20 fraction applies to unique dates, so the record counts are not required to form an exact 80/20 partition. This is a **single chronological holdout**, not rolling-origin cross-validation. Additional temporal checks and error analysis are documented in `model_optimization.md`.
 
 ## 6. Validation and Test Results
 
@@ -119,17 +119,17 @@ The implementation was checked with the following results:
 | Missing model input values | `0` |
 | `cnt` excluded from inputs | `True` |
 | Chronological dates separated | `True` |
-| Full automated test suite | **19 passed** |
+| Feature-validation test run | **19 passed at initial verification** |
 
 Feature tests cover calendar mapping, holiday handling, commute-peak rules, training/scenario parity and representative invalid inputs. The split test verifies distinct and correctly ordered calendar dates.
 
 ## 7. Constraints and Next Steps
 
-- **No model accuracy is claimed in this task.** MAE, RMSE and baseline comparisons will be established during Task 6.
+- Model evaluation results are recorded in `model_baseline.md` and `model_optimization.md`.
 - Predictions will represent **historical-pattern scenarios**, not current bike-share demand forecasts. The underlying data covers 2011–2012.
 - The user supplies holiday status; the interface does not independently verify a holiday calendar.
 - An engineered feature must be assessed for incremental value rather than assumed beneficial because it is intuitively plausible.
-- A previously saved model using nine features must not be used with the new ten-feature input contract. Retrain and regenerate the model artifact during Task 6.
+- A previously saved model using nine features must not be used with the new ten-feature input contract. Regenerate the model artifact with `python -m src.optimize`.
 - Numeric performance on later dates may be affected by year-to-year demand changes that the present feature contract does not explicitly model.
 
-**Task 5 status:** Feature engineering and chronological validation implemented, with 19 passing tests reported in the development environment. Baseline training and performance evaluation remain the scope of Task 6.
+**Implementation status:** Feature engineering and chronological validation are implemented; 19 tests passed during the initial feature-validation run. Model training and performance evaluation are documented separately.

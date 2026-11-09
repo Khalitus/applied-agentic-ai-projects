@@ -1,4 +1,5 @@
-"""Single-agent entrypoint, intentionally unfinished for the tool-calling tasks."""
+"""Restricted tool interface for historical bike-demand question answering."""
+
 from src.analytics import hourly_profile
 from src.predict import predict_demand
 
@@ -18,14 +19,4 @@ ALLOWED_TOOLS = {
 def ask_agent(question: str) -> str:
     if not question.strip():
         return "Please enter a question about rental patterns or demand."
-    # TODO (Tasks 9–10):
-    # 1. Define typed JSON schemas for these restricted tools.
-    # 2. Call the LLM with instructions and tool specifications.
-    # 3. Validate tool names and arguments before dispatch.
-    # 4. Send tool results back for a grounded final response.
-    # 5. Enforce a limit on tool-call rounds and catch failures.
-    return (
-        "Agent tool-calling is the next implementation exercise. "
-        "The SQL and prediction tools are available in src/analytics.py "
-        "and src/predict.py."
-    )
+    return "Agent-assisted analysis is not enabled in this version."

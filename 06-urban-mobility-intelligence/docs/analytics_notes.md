@@ -1,7 +1,6 @@
 # Historical Analytics — Implementation and Validation Notes
 
 **Project:** Urban Mobility Demand Intelligence  
-**Task:** 4 — Historical SQL and Pandas Analytics  
 **Status:** Implemented and validated
 
 ## 1. Purpose
@@ -107,7 +106,7 @@ These results were previously verified against the Pandas exploratory analysis.
 - Validated input ranges are used for working-day status, hour and weather category in the scenario functions.
 - Queries return structured rows (`dict` or `list[dict]`) suitable for downstream programmatic consumption.
 - The analytics functions perform only `SELECT` operations; they do not expose arbitrary SQL execution to the application or future AI agent.
-- SQLite indexes on `(dteday, hr)` and `hr` were established in Task 3. Additional indexes should be justified by measured query plans, not added speculatively.
+- SQLite indexes on `(dteday, hr)` and `hr` were established during database initialization. Additional indexes should be justified by measured query plans, not added speculatively.
 
 ## 6. Validation and testing
 
@@ -144,8 +143,8 @@ python -m pytest -q
 6. **Scope of scenario matching:** `historical_reference()` filters by hour, working-day status and weather category only. It does **not** match temperature, humidity, wind speed or every feature used by the ML model.
 7. **Averages are not predictions:** A historical mean provides context for an ML estimate but is not independently a calibrated forecast or prediction interval.
 
-## 8. Next integration step
+## 8. Application and agent integration
 
-In Tasks 8–10, the application will combine user-entered scenario features, ML inference and these read-only analytics functions. The AI agent will call approved tools and explain the returned results, preserving sample sizes and missing-data limitations rather than inventing numerical evidence.
+The prediction interface combines user-entered scenario features, optimized ML inference and these read-only analytics functions. Restricted agent tool calls remain an integration boundary; any future agent must ground numeric claims in actual tool responses and preserve sample-size limitations.
 
-**Task 4 outcome:** A validated, parameterized SQLite analytics layer ready for future prediction comparison and agent-tool integration.
+**Implementation status:** Validated, parameterized SQLite analytics are integrated with the scenario prediction interface; agent tool calling is not yet enabled.

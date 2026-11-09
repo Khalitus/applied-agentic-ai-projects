@@ -12,15 +12,15 @@ from src.train import chronological_split
 
 def test_selection_keeps_baseline_for_marginal_gain():
     results = [
-        {"name": "task6_baseline", "mae": 100.0},
+        {"name": "baseline_xgboost", "mae": 100.0},
         {"name": "shallow_regularized", "mae": 99.8},
     ]
-    assert optimization.choose_candidate(results) == "task6_baseline"
+    assert optimization.choose_candidate(results) == "baseline_xgboost"
 
 
 def test_selection_chooses_meaningful_validation_gain():
     results = [
-        {"name": "task6_baseline", "mae": 100.0},
+        {"name": "baseline_xgboost", "mae": 100.0},
         {"name": "shallow_regularized", "mae": 95.0},
     ]
     assert optimization.choose_candidate(results) == "shallow_regularized"
@@ -59,7 +59,7 @@ def test_inner_split_never_reaches_outer_holdout():
 
 def test_selection_rejects_invalid_scores():
     with pytest.raises(ValueError):
-        optimization.choose_candidate([{"name": "task6_baseline", "mae": float("nan")}])
+        optimization.choose_candidate([{"name": "baseline_xgboost", "mae": float("nan")}])
 
 
 def test_optimization_pipeline_saves_separate_artifacts(monkeypatch, tmp_path):
@@ -87,9 +87,9 @@ def test_optimization_pipeline_saves_separate_artifacts(monkeypatch, tmp_path):
     monkeypatch.setattr(optimization, "OPTIMIZATION_REPORT_PATH", tmp_path / "optimization.json")
     monkeypatch.setattr(optimization, "VALIDATION_PREDICTIONS_PATH", tmp_path / "validation.csv")
     monkeypatch.setattr(optimization, "OPTIMIZED_PREDICTIONS_PATH", tmp_path / "holdout.csv")
-    monkeypatch.setattr(optimization, "REPORT_PATH", tmp_path / "missing_task6_metrics.json")
+    monkeypatch.setattr(optimization, "REPORT_PATH", tmp_path / "missing_baseline_metrics.json")
     monkeypatch.setattr(optimization, "CANDIDATES", {
-        "task6_baseline": {
+        "baseline_xgboost": {
             "n_estimators": 8, "max_depth": 2, "learning_rate": 0.1,
         },
         "shallow_regularized": {
@@ -114,5 +114,5 @@ def test_optimization_pipeline_saves_separate_artifacts(monkeypatch, tmp_path):
     assert (holdout_rows["predicted_rentals"] >= 0).all()
     assert list(model.feature_names_in_) == list(FEATURES)
     assert report["selected_candidate"] in optimization.CANDIDATES
-    assert report["task6_holdout_reference"] is None
+    assert report["baseline_holdout_reference"] is None
     assert sum(item["observations"] for item in report["validation_error_analysis"]["by_hour"]) == 12

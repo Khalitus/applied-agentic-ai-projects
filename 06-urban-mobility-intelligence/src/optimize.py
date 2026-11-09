@@ -23,7 +23,7 @@ from src.train import baseline_predictions, chronological_split, regression_metr
 
 
 CANDIDATES = {
-    "task6_baseline": {
+    "baseline_xgboost": {
         "n_estimators": 200,
         "max_depth": 5,
         "learning_rate": 0.05,
@@ -70,24 +70,24 @@ def choose_candidate(
     results: list[dict],
     minimum_relative_improvement: float = MIN_RELATIVE_IMPROVEMENT,
 ) -> str:
-    """Keep Task 6 settings unless another candidate clears the prespecified gain."""
+    """Keep baseline XGBoost settings unless another candidate clears the prespecified gain."""
     if not 0 <= minimum_relative_improvement < 1:
         raise ValueError("minimum_relative_improvement must be in [0, 1)")
 
     scores = {result["name"]: float(result["mae"]) for result in results}
-    if "task6_baseline" not in scores:
-        raise ValueError("Missing Task 6 reference candidate")
+    if "baseline_xgboost" not in scores:
+        raise ValueError("Missing reference XGBoost candidate")
     if any(not np.isfinite(value) or value < 0 for value in scores.values()):
         raise ValueError("Candidate MAE must be finite and nonnegative")
 
     best_name = min(scores, key=scores.get)
-    baseline_mae = scores["task6_baseline"]
+    baseline_mae = scores["baseline_xgboost"]
     if (
-        best_name != "task6_baseline"
+        best_name != "baseline_xgboost"
         and scores[best_name] < baseline_mae * (1 - minimum_relative_improvement)
     ):
         return best_name
-    return "task6_baseline"
+    return "baseline_xgboost"
 
 
 def prediction_frame(data: pd.DataFrame, predictions: np.ndarray) -> pd.DataFrame:
@@ -164,8 +164,8 @@ def analyze_errors(rows: pd.DataFrame) -> dict:
     }
 
 
-def task6_reference(train: pd.DataFrame, holdout: pd.DataFrame) -> dict | None:
-    """Read the previous Task 6 score for reporting only, never for selection."""
+def baseline_reference(train: pd.DataFrame, holdout: pd.DataFrame) -> dict | None:
+    """Read the previous baseline score for reporting only, never for selection."""
     if not REPORT_PATH.exists():
         return None
     try:
@@ -265,7 +265,7 @@ def main() -> dict:
 
     report = {
         "dataset": "UCI Bike Sharing (hour.csv, 2011–2012)",
-        "selection_rule": "lowest validation MAE, requiring >0.5% gain over Task 6 settings",
+        "selection_rule": "lowest validation MAE, requiring >0.5% gain over baseline XGBoost settings",
         "outer_split": {
             "training_rows": len(full_train),
             "holdout_rows": len(holdout),
@@ -290,10 +290,10 @@ def main() -> dict:
         "holdout_optimized": holdout_metrics,
         "holdout_hourly_baseline": hourly_metrics,
         "holdout_global_mean_baseline": mean_metrics,
-        "task6_holdout_reference": task6_reference(full_train, holdout),
+        "baseline_holdout_reference": baseline_reference(full_train, holdout),
         "feature_importance": importance,
         "note": (
-            "Previous Task 6 holdout results were already inspected. "
+            "The holdout was inspected in the preceding baseline evaluation. "
             "Only inner-validation scores determined model selection; "
             "further tuning against the final holdout would bias evaluation."
         ),
@@ -325,7 +325,7 @@ def main() -> dict:
         "commute_peak_ablation": ablation,
         "holdout_optimized": holdout_metrics,
         "holdout_hourly_baseline": hourly_metrics,
-        "task6_holdout_reference": report["task6_holdout_reference"],
+        "baseline_holdout_reference": report["baseline_holdout_reference"],
         "top_features": importance[:5],
     }, indent=2))
     print(f"Optimized model saved: {OPTIMIZED_MODEL_PATH}")
