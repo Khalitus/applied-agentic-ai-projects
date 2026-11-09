@@ -8,7 +8,8 @@ MODEL_PATH = ROOT / "models" / "demand_xgb.joblib"
 REPORT_PATH = ROOT / "reports" / "model_metrics.json"
 
 TARGET = "cnt"
-FEATURES = (
+
+RAW_FEATURES = (
     "mnth",
     "hr",
     "holiday",
@@ -19,3 +20,10 @@ FEATURES = (
     "hum",
     "windspeed",
 )
+
+ENGINEERED_FEATURES = (
+    "commute_peak",
+)
+
+FEATURES = RAW_FEATURES + ENGINEERED_FEATURES
+
