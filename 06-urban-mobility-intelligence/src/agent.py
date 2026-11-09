@@ -40,6 +40,8 @@ For working-day comparisons, quote percent_difference_vs_nonworking from the
 compare_workdays tool exactly; never calculate, estimate, or guess a percentage
 in free text. If the computed field is null, state that no percentage is available.
 Never infer that a higher hourly mean establishes causation.
+Do not expose internal tool field names, JSON keys, function names or technical
+identifiers in the final answer. Explain their meaning in plain language.
 Answer concisely with clear units and evidence limitations.
 """
 

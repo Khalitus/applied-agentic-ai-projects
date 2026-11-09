@@ -1,5 +1,6 @@
 """Interactive historical demand estimation, analytics and bounded agent access."""
 
+import inspect
 import logging
 import math
 import sqlite3
@@ -15,6 +16,12 @@ from src.predict import estimate_scenario
 
 LOGGER = logging.getLogger(__name__)
 CHART_COLUMNS = ["hour", "avg_rentals", "day_type", "observations"]
+
+
+def build_chatbot() -> gr.Chatbot:
+    """Use message histories across supported Gradio major versions."""
+    options = {"type": "messages"} if "type" in inspect.signature(gr.Chatbot).parameters else {}
+    return gr.Chatbot(**options)
 
 
 def _integer_input(value, label: str) -> int:
@@ -176,6 +183,7 @@ with gr.Blocks(title="Urban Mobility Demand Intelligence") as demo:
         )
         gr.ChatInterface(
             fn=answer_question,
+            chatbot=build_chatbot(),
             examples=[
                 "Compare average bike rentals on working and non-working days, including sample sizes.",
                 "Which three hours have the highest average rentals on working days?",

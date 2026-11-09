@@ -1,79 +1,62 @@
-# Agent Tool Contract and Controlled Execution
+# Agent Tool Contract
 
 ## Purpose
 
-The tool boundary exposes a fixed set of historical bicycle-demand analytics and prediction functions to a future language-model orchestrator. It separates model-authored arguments from trusted Python execution. Tool availability does not mean a conversational agent is enabled.
+The conversational analytics service exposes a fixed set of trusted local functions to Gemini or Groq. Model-generated function requests are treated as **untrusted inputs**. An allowlisted Python dispatcher checks both function names and arguments before invoking SQLite analytics or XGBoost inference.
 
 ## Registered tools
 
-| Tool | Arguments | Result |
+| Tool | Inputs | Evidence returned |
 |---|---|---|
-| `hourly_profile` | `hour`: integer, 0–23 | Historical sample size and rental statistics for that hour |
-| `compare_workdays` | None | Working/non-working historical demand summaries |
-| `weather_impact` | None | Historical weather-category demand summaries and sample sizes |
-| `hourly_demand` | Optional `workingday`: 0 or 1 | Historical hourly group profile |
-| `historical_reference` | Required `hour`; optional `workingday` and `weathersit` | Conditional historical demand aggregates |
-| `estimate_scenario` | `date_text`, `hour`, `holiday`, `weather_code`, `temperature_c`, `humidity_pct`, `windspeed_kmh` | Optimized model estimate and SQL reference evidence |
+| `hourly_profile` | Required `hour` (integer 0–23) | Count, mean, minimum and maximum rentals for that hour |
+| `compare_workdays` | None | Two day-type summaries; a Python-computed working-day absolute and percentage difference |
+| `weather_impact` | None | Historical demand summary by weather category, with sample sizes |
+| `hourly_demand` | Optional `workingday` (0 or 1) | Hour-by-hour average and observation count |
+| `historical_reference` | Required `hour`; optional `workingday`, `weathersit` | Summary of records matching the categorical filters |
+| `estimate_scenario` | Date, hour, holiday flag, weather category, temperature, humidity, wind | Optimized model estimate and associated historical SQL reference |
 
-`estimate_scenario` is preferred over a bare model value when the question requests both a prediction and historical context. SQL reference observations match hour, working-day status and weather category, **not** exact meteorological values.
+All tools are **read-only**. No tool accepts arbitrary SQL, filesystem paths, Python code or a dynamic function name.
 
-## Request and response format
+## Execution contract
 
-Tool calls use a registered name and a JSON object of arguments. A tool invocation can receive a JSON string as emitted by an LLM function-calling interface or an already-decoded Python dictionary.
+The definitions in `src/agent_tools.py` use JSON-compatible input schemas. The registry is the only permitted source of handlers.
 
-Example:
+1. `dispatch_tool(name, arguments)` rejects unregistered tool names.
+2. `validate_arguments()` rejects malformed JSON, duplicate keys, missing or unexpected fields, invalid types, invalid calendar dates, non-finite numbers and out-of-range values.
+3. A valid request invokes only `TOOL_HANDLERS[name](**validated)`.
+4. The dispatcher wraps the result in `{"ok":true,"tool":"...","data":...}`.
+5. Errors are normalized to `unknown_tool`, `invalid_arguments`, `tool_unavailable` or `execution_error` without disclosing paths, SQL internals or secrets.
+
+Example valid request:
 
 ```json
 {"name":"historical_reference","arguments":{"hour":8,"workingday":1,"weathersit":1}}
 ```
 
-Successful execution returns:
+Example success envelope, based on the verified historical database:
 
 ```json
 {"ok":true,"tool":"historical_reference","data":{"hour":8,"observations":280,"avg_rentals":503.86,"min_rentals":66,"max_rentals":839}}
 ```
 
-The values above reproduce one observed historical comparison from the local dataset; they are not global defaults. Errors use a stable envelope:
+Example denied operation:
 
 ```json
-{"ok":false,"tool":"historical_reference","error":{"code":"invalid_arguments","message":"..."}}
+{"ok":false,"tool":"run_sql","error":{"code":"unknown_tool","message":"Requested tool is not registered"}}
 ```
 
-Permitted error codes are `unknown_tool`, `invalid_arguments`, `tool_unavailable`, and `execution_error`. Do not surface arbitrary database errors, filesystem paths, secrets or stack traces in tool responses.
+## Provider integration
 
-## Validation boundary
+`src/agent.py` translates the same six tool definitions for Gemini function declarations or Groq chat-completions tool calls. The provider cannot bypass validation. Function-call rounds and total call counts are bounded. When an API request fails, the alternate provider begins with fresh conversation state; existing tools are read-only, so duplicate retrieval is safe.
 
-The registry in `src/agent_tools.py` is authoritative. Requests are rejected unless the tool name is explicitly registered. Arguments are decoded as JSON objects and checked for required fields, unknown fields, exact primitive types and bounded numeric ranges. Invalid calendar dates, non-finite numeric values, duplicate JSON keys and oversized string payloads are rejected. SQL database paths and arbitrary queries are never exposed to the language model.
-
-The approved handlers call existing read-only aggregation functions or validated XGBoost inference. The caller must not be allowed to inject function names, SQL fragments or filesystem paths through arguments.
-
-## Implementing the dispatcher
-
-Complete `dispatch_tool(name, arguments)` in `src/agent_tools.py`. It must follow this order:
-
-1. Reject any name absent from `TOOL_HANDLERS` using `_failure(name, "unknown_tool", ...)`.
-2. Call `validate_arguments(name, arguments)`. Convert `ToolArgumentsError` into an `invalid_arguments` failure.
-3. Execute only `TOOL_HANDLERS[name](**validated)`.
-4. On success return `{"ok": True, "tool": name, "data": result}`.
-5. Catch `FileNotFoundError` and `sqlite3.Error` as `tool_unavailable` without leaking implementation details.
-6. Catch other exceptions as `execution_error` with a generic message. Do not conceal errors in development logs; log full exceptions on the server side when an agent is integrated.
-
-Do not use `eval`, `exec`, `globals`, Python attribute lookup derived from the model, arbitrary SQL, or a dynamically imported function.
-
-## Execution boundaries
-
-- The registered tool set is bounded and contains no general database mutation.
-- SQL queries use bound parameters and fixed SQL fragments.
-- Model requests are restricted to the existing seven-field scenario contract.
-- Small sample sizes must remain visible when interpreting results.
-- Historical 2011–2012 data cannot support claims about current demand or live operations.
-- The language-model API connection, tool-call rounds, timeout strategy and final grounded response are separate integration concerns.
+The instruction prompt requires tool-backed numerical claims, relevant sample counts and explicit distinctions between model estimates and historical SQL means. Prompt instructions mitigate—but cannot eliminate—incorrect prose or calculations. The Gradio chat processes each question independently without prior conversation context.
 
 ## Verification
 
 ```bash
 python -m pytest tests/test_agent_tools.py -q
-python -m pytest -q
+python -m pytest tests/test_agent.py tests/test_agent_fallback.py tests/test_agent_interface.py -q
+python -m scripts.release_check
 ```
 
-Tests cover schemas, argument handling, denied operations, execution results, and sanitized failures. For integration, only invoke tools via `dispatch_tool`; never execute model-authored functions directly.
+Read [agent execution](agent_execution.md), [provider routing](provider_fallback.md) and [release validation](release_validation.md) for operational checks and known limitations.
