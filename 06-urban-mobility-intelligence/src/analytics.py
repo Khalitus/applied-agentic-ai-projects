@@ -38,8 +38,21 @@ def compare_workdays(path: Path = DB_PATH) -> list[dict]:
         ORDER BY workingday
     """
     with connect(path) as connection:
-        rows = connection.execute(sql).fetchall()
-    return [dict(row) for row in rows]
+        rows = [dict(row) for row in connection.execute(sql).fetchall()]
+
+    by_day_type = {row["workingday"]: row for row in rows}
+    nonworking = by_day_type.get(0)
+    working = by_day_type.get(1)
+    if nonworking and working:
+        reference = nonworking["avg_rentals"]
+        comparison = working["avg_rentals"]
+        if reference is not None and comparison is not None:
+            working["difference_vs_nonworking"] = round(comparison - reference, 2)
+            working["percent_difference_vs_nonworking"] = (
+                round(100 * (comparison - reference) / reference, 2)
+                if reference != 0 else None
+            )
+    return rows
 
 
 def weather_impact(path: Path = DB_PATH) -> list[dict]:

@@ -2,31 +2,32 @@
 
 ## Objective
 
-The conversational analytics agent uses Gemini as its primary provider and Groq as a secondary provider when a Gemini API request fails. Both providers use the same six allowlisted analytics/prediction tools from `src/agent_tools.py`. The underlying SQLite and XGBoost components are unchanged.
+The conversational analytics agent supports **configurable provider priority**. Set `AGENT_PRIMARY_PROVIDER=groq` to use Groq first, with Gemini available as fallback, or `AGENT_PRIMARY_PROVIDER=gemini` for the reverse. Both providers use the same six allowlisted analytics/prediction tools from `src/agent_tools.py`. The underlying SQLite and XGBoost components are unchanged.
 
 ## Configuration
 
 The local `.env` file (not tracked by Git) accepts:
 
 ```dotenv
-GEMINI_API_KEY=...
-GEMINI_MODEL=gemini-3.5-flash-lite
+AGENT_PRIMARY_PROVIDER=groq
 GROQ_API_KEY=...
 GROQ_MODEL=openai/gpt-oss-120b
+GEMINI_API_KEY=...
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
 Model availability and free-tier quotas depend on each provider account and can change. Neither provider is guaranteed to provide uninterrupted or free service. Do not expose credentials in source code, reports, logs or screenshots.
 
 ## Failure behavior
 
-1. For each nonempty, valid user question, call Gemini first.
-2. If Gemini returns an API/provider exception (HTTP 400/401/403/404/429/5xx, a connection failure or timeout), log only the exception class and HTTP code. Do not log credentials or arbitrary provider messages.
-3. If `GROQ_API_KEY` is configured, start a new conversation using Groq and the original question. Do not reuse Gemini-specific SDK message objects.
-4. Send Groq the same tool definitions. Every requested function is dispatched through `dispatch_tool()`, including all allowlist and argument validation checks.
-5. On completion, return the Groq answer as an ordinary answer. If both providers fail, return concise sanitized diagnostic messages.
-6. Do **not** fail over on a normal answer, invalid tool request, local tool failure response, or tool-round limit.
+1. For each valid question, select the configured primary provider. The environment template prefers Groq because Gemini has returned HTTP 400 in the local project environment. If the setting is absent, the code retains Gemini-first for backward compatibility.
+2. On a provider API exception, log only the exception class and HTTP code. Do not log credentials or provider error bodies.
+3. Start a fresh conversation on the alternate configured provider, using the original question. Do not reuse SDK-specific message objects from the failed provider.
+4. Both providers receive the same six tool definitions and route all requested operations through `dispatch_tool()`.
+5. If both providers fail, return sanitized diagnostics. Do **not** fall back for ordinary model answers, invalid tool requests, application validation failures, or execution-limit responses.
+6. A missing primary-provider key allows the alternate provider to run if configured; the application does not require both credentials.
 
-A fallback started after some successful Gemini tool calls may repeat those calls on Groq. This is acceptable for the current **read-only** tools. Do not apply this restart policy to future state-changing tools without idempotency safeguards.
+Provider failover can repeat a previous successful tool request. All existing tools are read-only; do not reuse this policy for tools with side effects without idempotency safeguards.
 
 ## Execution constraints
 
@@ -51,7 +52,7 @@ python -m scripts.provider_diagnostics
 
 This makes one plain-text API request per configured provider and displays only access success or the exception class and HTTP status. For example, if plain Gemini requests succeed but the agent's Gemini request returns HTTP 400, inspect function declaration and request compatibility. The fallback can still work while that issue is investigated.
 
-Run the existing live agent smoke test using Gemini-first and Groq-on-error behavior:
+Run the live smoke test using the preference in `.env`:
 
 ```bash
 python -m scripts.agent_smoke_test

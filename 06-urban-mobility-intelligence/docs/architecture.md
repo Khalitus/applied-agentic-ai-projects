@@ -7,25 +7,27 @@ Urban Mobility Demand Intelligence provides hourly rental estimates for user-def
 ## Components
 
 ```text
-Official UCI hour.csv
-    |
-    +--> src/data.py ----------> src/db.py ----------> SQLite
-    |                                |                     |
-    |                                +--> src/analytics.py-+
-    |
-    +--> src/features.py
-             |
-             +--> src/train.py -----> baseline model + report
-             |
-             +--> src/optimize.py --> optimized model + analysis
-                                          |
-Scenario form (app.py) --> src/predict.py --+
-                            |               |
-                            +---------------+--> Historical SQL comparison
-                                                |
-                                            Displayed result
+UCI hour.csv -> src/data.py -> src/db.py -> SQLite
+       |                                  |
+       |                                  +-> src/analytics.py -> Gradio hourly chart
+       |                                                     |
+       +-> src/features.py -> src/train.py / src/optimize.py  |
+                                   |                         |
+                                   +-> optimized XGBoost     |
+                                            |                 |
+Scenario form -> src/predict.py -------------+----- SQL comparison
+        |
+        +-> Gradio demand estimate
 
-src/agent.py: restricted tool-calling integration point (not yet enabled)
+Natural-language question -> src/agent.py (Groq / Gemini)
+                                   |
+                          src/agent_tools.py
+                                   |
+                  validated analytics and scenario tools
+                                   |
+                          evidence-backed answer
+                                   |
+                             Gradio agent tab
 ```
 
 ## Data and source integrity
@@ -44,7 +46,15 @@ Model training is chronological by complete dates, with comparisons against both
 
 ## Restricted agent integration
 
-`src/agent.py` reserves the allowlisted tool boundary. LLM-driven tool selection and execution are not enabled. Integration should use typed schemas, bounded tool-call loops, validated arguments, structured tool responses and numeric claims grounded in SQL/model outputs. No arbitrary SQL or filesystem access should be exposed.
+`src/agent.py` implements manual function calling for Groq and Gemini with configurable provider priority and API-failure fallback. `src/agent_tools.py` enforces a six-tool allowlist, bounded JSON arguments, range validation and sanitized execution errors. A single provider attempt is limited to four tool rounds and eight tool calls. All local tools are read-only, so a provider restart can safely reissue historical queries.
+
+Tool responses include data computed by Python or SQL; specifically the working-day versus non-working-day absolute and relative differences are calculated in `src/analytics.py`. The model is instructed to use these supplied comparison values, but prompt-level grounding cannot guarantee all prose is accurate. Human review remains appropriate.
+
+The Gradio agent interface displays chat exchanges, but `ask_agent()` processes each question independently and receives no previous messages. The UI explicitly discloses this limitation. Only `AGENT_PRIMARY_PROVIDER`, `GEMINI_MODEL` and `GROQ_MODEL` select providers/models; the local `.env` holds credentials and is excluded from version control.
+
+## Historical visualization
+
+The `Historical patterns` tab builds a two-series hourly profile from parameterized SQLite aggregates, not model-generated data. Missing databases and query errors are surfaced without leaking internal connection details.
 
 ## Constraints
 

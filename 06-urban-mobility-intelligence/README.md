@@ -1,6 +1,6 @@
 # Urban Mobility Demand Intelligence
 
-A historical bicycle-rental demand intelligence application combining validated UCI Bike Sharing data, SQLite analytics, XGBoost regression and an interactive Gradio prediction form.
+A historical bicycle-rental demand intelligence application combining validated UCI Bike Sharing data, SQLite analytics, XGBoost regression and a three-part Gradio application with prediction, historical visualization and a bounded tool-calling agent.
 
 The system estimates **total hourly rentals** for a user-defined calendar/weather scenario and compares the estimate with historical observations that match the selected hour, working-day status and weather category. It is a **historical-pattern scenario estimator**, not a live demand forecast.
 
@@ -18,8 +18,9 @@ The original dataset is downloaded directly from UCI. No synthetic training data
 - Train baseline and optimized XGBoost regression models with date-separated evaluation.
 - Return an optimized model estimate alongside a clearly scoped historical reference and observation count.
 - Reject invalid inputs or missing model/database artifacts with actionable setup errors.
-
-Agent tool calling is an architectural integration point and **is not enabled** in the current interface. It will not be presented as implemented functionality.
+- Answer independent natural-language analytics questions through an allowlisted, validated tool-calling agent.
+- Prefer Groq or Gemini through local configuration, with the other provider available as API-error fallback.
+- Visualize recorded mean hourly demand on working and non-working days from SQLite.
 
 ## Setup
 
@@ -33,6 +34,7 @@ python -m scripts.download_data
 python -m src.db
 python -m src.train
 python -m src.optimize
+cp .env.example .env             # Add GROQ_API_KEY or GEMINI_API_KEY
 python -m pytest -q
 python app.py
 ```
@@ -50,8 +52,9 @@ Open the local Gradio URL printed in the terminal. If using an existing activate
 | `src/train.py` | Baseline regression and chronological holdout evaluation |
 | `src/optimize.py` | Inner-validation model selection, ablation and error analysis |
 | `src/predict.py` | Optimized inference and matched historical reference |
-| `app.py` | Gradio scenario interface |
-| `src/agent.py` | Inactive restricted agent integration point |
+| `app.py` | Gradio prediction, agent Q&A and SQL visualization |
+| `src/agent.py` | Gemini/Groq tool-calling orchestration and provider fallback |
+| `src/agent_tools.py` | Typed tool declarations, argument validation and allowlisted execution |
 
 See [Architecture and Data Flow](docs/architecture.md) for component boundaries and data-flow details.
 
@@ -74,6 +77,8 @@ The training and optimization scripts write serialized models and JSON/CSV repor
 
 ## Limitations
 
+The agent answers **each question independently**; prior chat messages appear in the interface but are not passed to the language model as conversational context. LLM-written explanations can contain mistakes even when SQL/model figures are correct. The working-day percentage comparison is calculated by Python and supplied to the agent, but final answers still require review. Provider access, usage quotas and API availability vary.
+
 Historical data covers 2011–2012; there is no real-time weather feed, bicycle inventory or station-level information. A scenario's date is used for calendar features and is not a learned projection of future demand. Year-on-year network growth is not modeled explicitly. Historical SQL comparisons match categorical conditions but not exact temperature, humidity, wind or date. The rarest weather category has only three observations in the source dataset.
 
 ## Documentation
@@ -84,6 +89,9 @@ Historical data covers 2011–2012; there is no real-time weather feed, bicycle 
 - [Baseline evaluation](docs/model_baseline.md)
 - [Optimization and error analysis](docs/model_optimization.md)
 - [Prediction interface](docs/prediction_interface.md)
+- [Agent tool execution](docs/agent_execution.md)
+- [Provider routing](docs/provider_fallback.md)
+- [Agent application interface](docs/agent_interface.md)
 
 ## License and attribution
 
