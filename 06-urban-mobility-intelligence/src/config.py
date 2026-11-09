@@ -28,3 +28,8 @@ ENGINEERED_FEATURES = (
 FEATURES = RAW_FEATURES + ENGINEERED_FEATURES
 
 PREDICTIONS_PATH = ROOT / "reports" / "holdout_predictions.csv"
+
+OPTIMIZED_MODEL_PATH = ROOT / "models" / "demand_xgb_optimized.joblib"
+OPTIMIZATION_REPORT_PATH = ROOT / "reports" / "optimization_report.json"
+VALIDATION_PREDICTIONS_PATH = ROOT / "reports" / "validation_predictions.csv"
+OPTIMIZED_PREDICTIONS_PATH = ROOT / "reports" / "optimized_holdout_predictions.csv"
