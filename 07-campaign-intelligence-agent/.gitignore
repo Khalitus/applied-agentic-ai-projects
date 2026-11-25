@@ -1,0 +1,49 @@
+
+# Python caches and build output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Virtual environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Downloaded datasets and local databases
+data/raw/*
+!data/raw/.gitkeep
+data/processed/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Generated binary model artifacts
+artifacts/*
+!artifacts/.gitkeep
+*.joblib
+*.pkl
+
+# Operating system and editor metadata
+.DS_Store
+._*
+.AppleDouble
+.Spotlight-V100/
+.Trashes/
+Thumbs.db
+.vscode/
+.idea/
