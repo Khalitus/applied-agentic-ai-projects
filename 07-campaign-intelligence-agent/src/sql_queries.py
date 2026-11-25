@@ -73,3 +73,121 @@ def query_contact_segments(min_records=50, limit=10, path=DATABASE):
         return [dict(row) for row in connection.execute(
             SQL_CONTACT_SEGMENTS, (min_records, limit)
         )]
+
+
+AGE_GROUP = """CASE
+        WHEN age IS NULL THEN 'Unknown'
+        WHEN age < 30 THEN 'Under 30'
+        WHEN age < 45 THEN '30-44'
+        WHEN age < 60 THEN '45-59'
+        ELSE '60+'
+    END"""
+
+BALANCE_GROUP = """CASE
+        WHEN balance IS NULL THEN 'Unknown'
+        WHEN balance < 0 THEN 'Negative'
+        WHEN balance = 0 THEN 'Zero'
+        WHEN balance < 1000 THEN 'Low'
+        WHEN balance < 5000 THEN 'Medium'
+        ELSE 'High'
+    END"""
+
+SEGMENT_METRICS = """COUNT(*) AS total_contacts,
+       SUM(CASE WHEN y = 'yes' THEN 1 ELSE 0 END) AS subscriptions,
+       SUM(CASE WHEN y = 'no' THEN 1 ELSE 0 END) AS non_subscriptions,
+       100.0 * SUM(CASE WHEN y = 'yes' THEN 1 ELSE 0 END) / COUNT(*)
+           AS conversion_rate,
+       AVG(age) AS average_age,
+       AVG(balance) AS average_balance"""
+
+DISPLAY_METRICS = """total_contacts, subscriptions, non_subscriptions,
+       ROUND(conversion_rate, 2) AS conversion_rate,
+       ROUND(average_age, 2) AS average_age,
+       ROUND(average_balance, 2) AS average_balance"""
+
+
+def _single_segment_sql(group, expression):
+    return f"""
+WITH segments AS (
+    SELECT age, balance, y,
+    {expression} AS {group}
+    FROM campaign_records
+), segment_statistics AS (
+    SELECT {group}, {SEGMENT_METRICS}
+    FROM segments
+    GROUP BY {group}
+    HAVING COUNT(*) >= ?
+)
+SELECT {group}, {DISPLAY_METRICS}
+FROM segment_statistics
+ORDER BY conversion_rate DESC, total_contacts DESC, {group};
+"""
+
+
+SQL_AGE_SEGMENTS = _single_segment_sql("age_group", AGE_GROUP)
+SQL_BALANCE_SEGMENTS = _single_segment_sql("balance_group", BALANCE_GROUP)
+
+COMBINED_STATISTICS = f"""
+WITH age_segments AS (
+    SELECT age, balance, y,
+    {AGE_GROUP} AS age_group
+    FROM campaign_records
+), combined_segments AS (
+    SELECT age_group, age, balance, y,
+    {BALANCE_GROUP} AS balance_group
+    FROM age_segments
+), segment_statistics AS (
+    SELECT age_group, balance_group, {SEGMENT_METRICS}
+    FROM combined_segments
+    GROUP BY age_group, balance_group
+    HAVING COUNT(*) >= ?
+)"""
+
+SQL_AGE_BALANCE_SEGMENTS = COMBINED_STATISTICS + f"""
+SELECT age_group, balance_group, {DISPLAY_METRICS}
+FROM segment_statistics
+ORDER BY conversion_rate DESC, total_contacts DESC, age_group, balance_group;
+"""
+
+SQL_RANKED_SEGMENTS = COMBINED_STATISTICS + f""", ranked_segments AS (
+    SELECT *, DENSE_RANK() OVER (
+        PARTITION BY age_group ORDER BY conversion_rate DESC
+    ) AS segment_rank
+    FROM segment_statistics
+)
+SELECT age_group, balance_group, {DISPLAY_METRICS}, segment_rank
+FROM ranked_segments
+WHERE segment_rank <= ?
+ORDER BY age_group, segment_rank, total_contacts DESC, balance_group;
+"""
+
+
+def _query_segments(sql, parameters, path):
+    with closing(_connect(path)) as connection:
+        connection.row_factory = sqlite3.Row
+        return [dict(row) for row in connection.execute(sql, parameters)]
+
+
+def query_age_segments(min_records=1, path=DATABASE):
+    """Return historical metrics grouped by age range."""
+    _positive_integer(min_records, "min_records")
+    return _query_segments(SQL_AGE_SEGMENTS, (min_records,), path)
+
+
+def query_balance_segments(min_records=1, path=DATABASE):
+    """Return historical metrics grouped by account balance range."""
+    _positive_integer(min_records, "min_records")
+    return _query_segments(SQL_BALANCE_SEGMENTS, (min_records,), path)
+
+
+def query_age_balance_segments(min_records=100, path=DATABASE):
+    """Return qualifying age and balance combinations."""
+    _positive_integer(min_records, "min_records")
+    return _query_segments(SQL_AGE_BALANCE_SEGMENTS, (min_records,), path)
+
+
+def query_ranked_segments(min_records=100, top_n=3, path=DATABASE):
+    """Return the top distinct conversion ranks per age group, including ties."""
+    _positive_integer(min_records, "min_records")
+    _positive_integer(top_n, "top_n")
+    return _query_segments(SQL_RANKED_SEGMENTS, (min_records, top_n), path)
