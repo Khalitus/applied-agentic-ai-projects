@@ -50,7 +50,7 @@ Open the local URL displayed by Gradio (normally `http://127.0.0.1:7860`).
 |---|---|
 | `python -m scripts.fetch_data` | Downloads the official CSV to `data/raw/` |
 | `python -m scripts.ingest_data` | Builds a local SQLite database from the downloaded CSV |
-| `python -m src.ml` | Trains the baseline model and writes metrics to `reports/` |
+| `python -m src.ml` | Trains the baseline model and writes development metrics to `reports/` |
 | `python app.py` | Starts the Gradio interface |
 | `python -m pytest -q` | Runs automated checks |
 | `sqlite3 data/campaigns.sqlite3 < sql/analysis.sql` | Runs sample queries using the SQLite CLI |
@@ -73,7 +73,7 @@ LangGraph routes explicitly selected requests to deterministic SQL or ML functio
 
 ## Evaluation and limitations
 
-The baseline uses a source-order 70/15/15 train/validation/holdout split and a fixed 0.5 decision threshold. Preprocessing is fitted exclusively to training observations. `src.ml` calculates classification and probability-based metrics; **this README does not claim an achieved score before execution on the original dataset**.
+The baseline uses a source-order 70/15/15 train/validation/holdout split and a fixed 0.5 decision threshold. Preprocessing is fitted exclusively to training observations. `src.ml` calculates classification and probability-based metrics on training and validation only; the final holdout is reserved for evaluation after model selection. **this README does not claim an achieved score before execution on the original dataset**.
 
 Source-order splitting is a temporal proxy, not a verified time- and customer-independent evaluation. The dataset lacks stable customer identifiers and complete timestamps. The historical source population may differ substantially from present-day banking customers. A prediction is neither causal evidence nor a guaranteed customer outcome. No outreach action or financial decision is automated.
 
